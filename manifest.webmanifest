@@ -1,0 +1,21 @@
+{
+  "name": "Reminder — Οι υπενθυμίσεις μου",
+  "short_name": "Reminder",
+  "description": "Προσωπικές υπενθυμίσεις, ρουτίνες και καθημερινή οργάνωση.",
+  "lang": "el",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070e1d",
+  "theme_color": "#071127",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}
