@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071127">
+  <meta name="description" content="Reminder: οι προσωπικές σου υπενθυμίσεις σε μια κομψή εφαρμογή.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Reminder">
+  <title>Reminder • Οι υπενθυμίσεις μου</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <svg aria-hidden="true" class="svg-definitions" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4l11-11a2.1 2.1 0 0 0-4-4L4 16v4ZM13.5 6.5l4 4"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4m14-1v2a3 3 0 0 1-3 3H3"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="#071127"/><circle cx="16" cy="12" r="2" fill="#071127"/><circle cx="10" cy="18" r="2" fill="#071127"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V9m-5 5 5-5 5 5M4 7V3h16v4"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 4h6m-9 3 1 14h10l1-14M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 2 7 7 3-7 2-2 8-3-8-7-2 7-3 3-7Z"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Μενού εφαρμογής">
+      <div class="brand">
+        <span class="brand-symbol"><svg><use href="#i-bell"/></svg></span>
+        <span class="brand-copy"><strong>reminder<span class="brand-period">.</span></strong><small>MY DAILY FLOW</small></span>
+      </div>
+      <div class="sidebar-caption">Η ΕΦΑΡΜΟΓΗ ΜΟΥ</div>
+      <nav class="main-nav" aria-label="Προβολή υπενθυμίσεων">
+        <button class="nav-link active" type="button" data-filter="active"><svg><use href="#i-list"/></svg><span>Υπενθυμίσεις</span></button>
+        <button class="nav-link" type="button" data-filter="today"><svg><use href="#i-calendar"/></svg><span>Σήμερα</span></button>
+        <button class="nav-link" type="button" data-filter="upcoming"><svg><use href="#i-clock"/></svg><span>Προσεχώς</span></button>
+        <button class="nav-link" type="button" data-filter="completed"><svg><use href="#i-check"/></svg><span>Ολοκληρωμένες</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="side-glow"><svg><use href="#i-spark"/></svg><strong>Μικρές υπενθυμίσεις.<br>Μεγάλη διαφορά.</strong><span>Η καθημερινότητά σου, οργανωμένη.</span></div>
+        <p>REMINDER PWA <span>v1.0</span></p>
+      </div>
+    </aside>
+
+    <div class="content-area">
+      <header class="topbar">
+        <div class="topbar-heading">
+          <span class="eyebrow">ΗΜΕΡΗΣΙΟΣ ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ</span>
+          <h1>Οι υπενθυμίσεις μου<span>.</span></h1>
+          <p id="todayLabel">—</p>
+        </div>
+        <button class="top-add button-primary" id="topAdd" type="button"><svg><use href="#i-plus"/></svg><span>Νέα υπενθύμιση</span></button>
+      </header>
+
+      <main>
+        <section class="hero" aria-label="Σύνοψη">
+          <div class="hero-shine"></div>
+          <div class="hero-text">
+            <span class="hero-kicker"><span class="pulse-dot"></span> Ο ΠΡΟΣΩΠΙΚΟΣ ΣΟΥ ΧΩΡΟΣ</span>
+            <h2>Μην ξεχάσεις<br><em>τίποτα σημαντικό.</em></h2>
+            <p>Οργάνωσε όσα χρειάζεσαι και κράτησε τη μέρα σου υπό έλεγχο.</p>
+            <button class="hero-button" id="heroAdd" type="button">Προσθήκη υπενθύμισης <svg><use href="#i-arrow"/></svg></button>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="ring ring-outer"></div><div class="ring ring-middle"></div><div class="ring ring-inner"></div>
+            <div class="hero-bell"><svg><use href="#i-bell"/></svg></div>
+            <span class="glow-star star-one">✦</span><span class="glow-star star-two">✦</span><span class="glow-star star-three">✧</span>
+          </div>
+        </section>
+
+        <section class="stats" aria-label="Στατιστικά">
+          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-list"/></svg></span><div><strong id="statActive">0</strong><span>Ενεργές</span></div></div>
+          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-calendar"/></svg></span><div><strong id="statToday">0</strong><span>Για σήμερα</span></div></div>
+          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-check"/></svg></span><div><strong id="statDone">0</strong><span>Ολοκληρωμένες</span></div></div>
+        </section>
+
+        <section class="reminders-section" aria-labelledby="reminderHeading">
+          <div class="section-heading">
+            <div><span class="eyebrow">ΣΕ ΠΡΩΤΟ ΠΛΑΝΟ</span><h2 id="reminderHeading">Οι υπενθυμίσεις σου</h2></div>
+            <span id="visibleCount" class="section-count">0 υπενθυμίσεις</span>
+          </div>
+          <div id="reminderList" class="reminder-list" aria-live="polite"></div>
+        </section>
+
+        <section class="notice" aria-label="Κατάσταση ειδοποιήσεων">
+          <div class="notice-icon"><svg><use href="#i-bell"/></svg></div>
+          <div class="notice-copy"><strong id="notificationTitle">Ειδοποιήσεις κινητού</strong>
+            <p id="notificationExplanation">Σε αυτή την έκδοση οι χρονικές ειδοποιήσεις λειτουργούν όσο η εφαρμογή παραμένει ανοικτή. Για να έρχονται και όταν είναι κλειστή απαιτείται σύνδεση υπηρεσίας Push.</p>
+          </div>
+          <button id="enableNotifications" class="button-outline" type="button">Ενεργοποίηση / δοκιμή</button>
+        </section>
+
+        <div class="utility-row"><span>Οι υπενθυμίσεις φυλάσσονται σε αυτήν τη συσκευή.</span>
+          <div class="utility-actions">
+            <button id="exportButton" type="button"><svg><use href="#i-download"/></svg> Αντίγραφο</button>
+            <button id="importButton" type="button"><svg><use href="#i-upload"/></svg> Εισαγωγή</button>
+            <input id="importFile" type="file" accept=".json,application/json" hidden>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <button class="floating-add" id="floatingAdd" type="button" aria-label="Νέα υπενθύμιση"><svg><use href="#i-plus"/></svg></button>
+
+  <dialog id="editorDialog" aria-labelledby="dialogTitle">
+    <form id="reminderForm" novalidate>
+      <div class="dialog-heading"><div><span class="eyebrow">ΟΡΓΑΝΩΣΗ</span><h2 id="dialogTitle">Νέα υπενθύμιση</h2></div><button type="button" class="icon-button" id="closeDialog" aria-label="Κλείσιμο"><svg><use href="#i-close"/></svg></button></div>
+      <div class="form-group"><label for="reminderTitle">Τίτλος <span>*</span></label><input id="reminderTitle" type="text" autocomplete="off" maxlength="110" placeholder="π.χ. Πότισμα φυτών" required></div>
+      <div class="form-group"><label for="reminderNotes">Σημείωση (προαιρετικά)</label><textarea id="reminderNotes" rows="2" maxlength="500" placeholder="Πρόσθετες λεπτομέρειες..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label for="reminderDate">Ημερομηνία έναρξης</label><input id="reminderDate" type="date" required></div>
+        <div class="form-group"><label for="reminderTime">Ώρα</label><input id="reminderTime" type="time" required value="09:00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="reminderRepeat">Επανάληψη</label><select id="reminderRepeat"><option value="once">Μία φορά</option><option value="daily">Κάθε μέρα</option><option value="weekdays">Δευτέρα – Παρασκευή</option><option value="weekly">Κάθε εβδομάδα</option><option value="monthly">Κάθε μήνα</option></select></div>
+        <div class="form-group"><label for="reminderCategory">Κατηγορία</label><select id="reminderCategory"><option value="general">Γενικά</option><option value="bike">Ποδήλατο</option><option value="work">Εργασία</option><option value="home">Σπίτι</option><option value="health">Προσωπικά</option></select></div>
+      </div>
+      <p class="form-hint">Η ημερομηνία καθορίζει επίσης την ημέρα εβδομάδας ή μήνα για επαναλαμβανόμενες υπενθυμίσεις.</p>
+      <div class="dialog-actions"><button type="button" id="deleteReminder" class="button-danger" hidden>Διαγραφή</button><div class="action-spacer"></div><button type="button" class="button-muted" id="cancelDialog">Άκυρο</button><button type="submit" class="button-primary" id="saveReminder">Αποθήκευση</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
