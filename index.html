@@ -12,6 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./push.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -97,7 +98,7 @@
         <section class="notice" aria-label="Κατάσταση ειδοποιήσεων">
           <div class="notice-icon"><svg><use href="#i-bell"/></svg></div>
           <div class="notice-copy"><strong id="notificationTitle">Ειδοποιήσεις κινητού</strong>
-            <p id="notificationExplanation">Σε αυτή την έκδοση οι χρονικές ειδοποιήσεις λειτουργούν όσο η εφαρμογή εκτελείται ενεργά. Για να έρχονται και όταν είναι κλειστή απαιτείται σύνδεση υπηρεσίας Push.</p>
+            <p id="notificationExplanation">Μπορείς να ενεργοποιήσεις πραγματικές Push ειδοποιήσεις, ακόμη κι όταν η εφαρμογή είναι κλειστή. Οι υπενθυμίσεις της συσκευής σου θα συγχρονίζονται με την υπηρεσία αποστολής.</p>
           </div>
           <button id="enableNotifications" class="button-outline" type="button">Ενεργοποίηση / δοκιμή</button>
         </section>
