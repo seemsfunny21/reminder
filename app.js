@@ -54,7 +54,7 @@
     } catch { return []; }
   }
   function persist() {
-    try { localStorage.setItem(STORAGE_KEY,JSON.stringify(reminders)); }
+    try { localStorage.setItem(STORAGE_KEY,JSON.stringify(reminders)); window.ReminderPush?.changed(reminders); }
     catch { toast("Η αποθήκευση απέτυχε. Έλεγξε τον χώρο ή τις ρυθμίσεις του browser."); }
   }
   function escapeHtml(value) {
@@ -265,32 +265,43 @@
     });
   }
   function updatePermissionUI(){
-    const allowed = "Notification" in window && Notification.permission==="granted";
-    $("enableNotifications").textContent=allowed?"Δοκιμή ειδοποίησης":"Ενεργοποίηση / δοκιμή";
-    $("notificationTitle").textContent=allowed?"Οι ειδοποιήσεις επιτρέπονται":"Ειδοποιήσεις κινητού";
-    $("notificationExplanation").textContent=allowed
-      ?"Μπορείς να λαμβάνεις χρονικές ειδοποιήσεις όσο η εφαρμογή εκτελείται ενεργά. Για πραγματικά push με κλειστή εφαρμογή απαιτείται επιπλέον υπηρεσία αποστολής."
-      :"Ενεργοποίησε την άδεια για ειδοποιήσεις όσο η εφαρμογή εκτελείται ενεργά. Για push με κλειστή εφαρμογή χρειάζεται επιπλέον υπηρεσία αποστολής.";
+    const push=window.ReminderPush;
+    const active=!!push?.isActive();
+    const permission="Notification" in window && Notification.permission==="granted";
+    $("enableNotifications").textContent=active ? "Δοκιμή Push" : "Ενεργοποίηση Push";
+    $("notificationTitle").textContent=active ? "Push ενεργό σε αυτή τη συσκευή" : "Ειδοποιήσεις κινητού";
+    $("notificationExplanation").textContent=active
+      ? "Οι υπενθυμίσεις αυτής της συσκευής έχουν συνδεθεί με το Supabase. Θα αποστέλλονται στο κινητό ακόμη και με κλειστή εφαρμογή, εφόσον επιτρέπονται οι ειδοποιήσεις και η συσκευή έχει σύνδεση."
+      : push?.supported()
+      ? "Πάτησε Ενεργοποίηση Push και επίτρεψε τις ειδοποιήσεις. Οι υπενθυμίσεις θα αποστέλλονται από το Supabase ακόμη κι όταν η εφαρμογή είναι κλειστή."
+      : "Οι Web Push ειδοποιήσεις δεν υποστηρίζονται σε αυτή τη λειτουργία του browser. Στο iPhone απαιτείται εγκατάσταση στην αρχική οθόνη (iOS 16.4+).";
   }
+  window.addEventListener("reminderpushstate",event=>{
+    updatePermissionUI();
+    if(event.detail?.message && !event.detail.active) console.warn("Reminder Push:",event.detail.message);
+  });
   $("enableNotifications").addEventListener("click",async()=>{
-    if (!("Notification" in window) || !("serviceWorker" in navigator)) {
-      toast("Αυτός ο browser δεν υποστηρίζει τις απαραίτητες ειδοποιήσεις."); return;
-    }
+    const button=$("enableNotifications");
+    if(!window.ReminderPush) {toast("Η υπηρεσία Push δεν φορτώθηκε.");return;}
+    button.disabled=true;
+    const wasActive=window.ReminderPush.isActive();
+    button.textContent="Σύνδεση...";
     try {
-      const permission=Notification.permission==="default" ? await Notification.requestPermission():Notification.permission;
+      if(wasActive) await window.ReminderPush.test();
+      else await window.ReminderPush.enable(reminders);
+      toast("Η ειδοποίηση Push στάλθηκε από το Supabase. Έλεγξε τη συσκευή σου.");
+    } catch(error) {
+      console.error("Remote push failed",error);
+      toast(error?.message || "Η ενεργοποίηση Push απέτυχε.");
+    } finally {
+      button.disabled=false;
       updatePermissionUI();
-      if (permission!=="granted") {toast("Δεν έχει δοθεί άδεια ειδοποιήσεων.");return;}
-      await showSystemNotification("Reminder • Δοκιμή","Οι ειδοποιήσεις συστήματος λειτουργούν στη συσκευή σου.","reminder-test");
-      toast("Στάλθηκε δοκιμαστική ειδοποίηση.");
-    } catch(e) {
-      console.error("Notification test failed",e);
-      toast("Δεν μπόρεσε να εμφανιστεί ειδοποίηση. Έλεγξε τις άδειες και την εγκατάσταση της εφαρμογής.");
     }
   });
 
   let checking=false;
   async function checkDue() {
-    if (checking || !("Notification" in window) || Notification.permission!=="granted" || !("serviceWorker" in navigator)) return;
+    if (checking || window.ReminderPush?.isActive() || !("Notification" in window) || Notification.permission!=="granted" || !("serviceWorker" in navigator)) return;
     checking=true;
     try {
       const now=Date.now();
@@ -318,8 +329,8 @@
   }
   document.addEventListener("visibilitychange",()=>{ if(!document.hidden){render();checkDue();} });
   window.addEventListener("focus",()=>{render();checkDue();});
-  window.addEventListener("storage",event=>{if(event.key===STORAGE_KEY){reminders=loadReminders();render();}});
-  initServiceWorker().then(checkDue);
+  window.addEventListener("storage",event=>{if(event.key===STORAGE_KEY){reminders=loadReminders();render();window.ReminderPush?.changed(reminders);}});
+  initServiceWorker().then(()=>{window.ReminderPush?.init(()=>reminders);checkDue();});
   updatePermissionUI();render();
   setInterval(checkDue,15000);
   setInterval(()=>render(),60000);
