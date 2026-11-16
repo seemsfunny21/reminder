@@ -1,11 +1,11 @@
-const CACHE_NAME = "reminder-pwa-v4";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css","./push.js","./app.js","./manifest.webmanifest","./icon.svg"];
+const CACHE_NAME = "reminder-pwa-v5";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=2","./push.js","./app.js?v=2","./manifest.webmanifest","./icon.svg"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
 self.addEventListener("activate",event=>{
   event.waitUntil(Promise.all([
-    caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))),
+    caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("reminder-pwa-") && key!==CACHE_NAME).map(key=>caches.delete(key)))),
     self.clients.claim()
   ]));
 });
@@ -36,7 +36,7 @@ self.addEventListener("push",event=>{
   try{payload=event.data?.json()||{};}
   catch{payload={body:event.data?.text()||""};}
   event.waitUntil(self.registration.showNotification(
-    typeof payload.title==="string" ? payload.title : "Reminder",
+    typeof payload.title==="string" ? payload.title : "Υπενθυμίσεις",
     {
       body:typeof payload.body==="string"?payload.body:"Έχεις μια νέα υπενθύμιση.",
       icon:"./icon.svg",badge:"./icon.svg",
