@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#071127">
-  <meta name="description" content="Reminder: οι προσωπικές σου υπενθυμίσεις σε μια κομψή εφαρμογή.">
+  <meta name="theme-color" content="#081222">
+  <meta name="description" content="Υπενθυμίσεις: γρήγορη καθημερινή οργάνωση.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Reminder">
+  <meta name="apple-mobile-web-app-title" content="Υπενθυμίσεις">
   <title>Υπενθυμίσεις • Η οργάνωσή μου</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./premium.css?v=4">
+  <link rel="stylesheet" href="./midnight.css?v=1">
   <script src="./push.js" defer></script>
-  <script src="./app.js?v=5" defer></script>
+  <script src="./app.js?v=6" defer></script>
 </head>
 <body class="premium-glass">
   <svg aria-hidden="true" class="svg-definitions" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +64,7 @@
               <h1>Υπενθυμίσεις<span>.</span></h1>
               <p id="todayLabel">—</p>
             </div>
-            <button class="top-add button-primary" id="topAdd" type="button" aria-label="Νέα υπενθύμιση" title="Νέα υπενθύμιση"><svg><use href="#i-plus"/></svg><span>Νέα</span></button>
+            <button class="top-add button-primary" id="topAdd" type="button" aria-label="Νέα υπενθύμιση" title="Νέα υπενθύμιση"><svg><use href="#i-bell"/></svg></button>
           </header>
           <section class="quick-composer" id="quickComposer" aria-labelledby="quickHeading">
             <div class="quick-ambient" aria-hidden="true"></div>
@@ -74,9 +75,9 @@
             <form id="quickReminderForm" class="quick-form" autocomplete="off" novalidate>
               <section class="wizard-step" data-step="message" aria-labelledby="quickHeading">
                 <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-bell"/></svg></span>
-                <h2 id="quickHeading">Γράψε υπενθύμιση</h2>
+                <h2 id="quickHeading">Τι θέλεις να θυμηθείς;</h2>
                 <label class="sr-only" for="quickReminderTitle">Τι να σου θυμίσω;</label>
-                <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Τι θέλεις να θυμηθείς;" enterkeyhint="next" required>
+                <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Γράψε την υπενθύμισή σου…" enterkeyhint="next" required>
                 <button id="quickMessageNext" class="button-primary wizard-next" type="button">Επόμενο <svg><use href="#i-arrow"/></svg></button>
               </section>
               <section class="wizard-step" data-step="date" aria-labelledby="quickDateHeading" hidden>
@@ -112,7 +113,7 @@
         <section class="list-half" aria-labelledby="reminderHeading">
           <div class="list-half-header">
             <div class="list-header-name">
-              <h2 id="reminderHeading">Η λίστα μου</h2>
+              <h2 id="reminderHeading">Οι υπενθυμίσεις μου</h2>
               <span id="visibleCount" class="section-count">0 υπενθυμίσεις</span>
             </div>
             <span class="list-header-icon" aria-hidden="true"><svg><use href="#i-list"/></svg></span>
