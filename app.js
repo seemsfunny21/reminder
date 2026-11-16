@@ -182,7 +182,7 @@
   function adjustQuickDateForTime() {
     if(quickDateWasChosen)return;
     const time=$("quickReminderTime").value;
-    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(time))return;
+    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))return;
     const now=new Date();
     const today=localDate(now);
     const candidate=withTime(parseDate(today),time);
@@ -195,7 +195,7 @@
     const value=$("quickCountdownValue");
     const info=$("quickCountdownLabel");
     const group=$("quickCountdown");
-    const valid=date && /^([01]\\d|2[0-3]):[0-5]\\d$/.test(time);
+    const valid=date && /^([01]\d|2[0-3]):[0-5]\d$/.test(time);
     group.classList.toggle("is-expired",!valid);
     if(!valid) {
       value.textContent="--:--";info.textContent="Επίλεξε ημερομηνία και ώρα.";
@@ -249,7 +249,7 @@
     const date=$("quickReminderDate").value;
     const time=$("quickReminderTime").value;
     const day=parseDate(date);
-    if(!title || !day || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(time)) {
+    if(!title || !day || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) {
       toast("Γράψε μια υπενθύμιση και διάλεξε ημερομηνία και ώρα.");return;
     }
     if(withTime(day,time).getTime()<=Date.now()){
