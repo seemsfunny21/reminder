@@ -1,4 +1,4 @@
-const CACHE_NAME = "reminder-pwa-v11";
+const CACHE_NAME = "reminder-pwa-v12-offline-first";
 const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=1","./push.js","./app.js?v=6","./manifest.webmanifest","./icon.svg"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
@@ -9,27 +9,45 @@ self.addEventListener("activate",event=>{
     self.clients.claim()
   ]));
 });
-self.addEventListener("fetch",event=>{
-  if(event.request.method!=="GET" || new URL(event.request.url).origin!==self.location.origin)return;
-  event.respondWith((async()=>{
-    try{
-      const network=await fetch(event.request);
-      if(network.ok){
-        const cache=await caches.open(CACHE_NAME);
-        cache.put(event.request,network.clone()).catch(()=>{});
-      }
-      return network;
-    }catch{
-      const cached=await caches.match(event.request);
-      if(cached)return cached;
-      if(event.request.mode==="navigate"){
-        const fallback=await caches.match("./index.html");
-        if(fallback)return fallback;
-      }
-      return Response.error();
+/* Instant offline-first app shell. Every static resource is returned from
+   its own saved cache; a conditional network request refreshes only changes.
+   External live data, including Supabase, never passes through this worker. */
+self.addEventListener("fetch", event => {
+  const req = event.request;
+  const url = new URL(req.url);
+  const scope = new URL(self.registration.scope);
+  if (req.method !== "GET" || url.origin !== scope.origin ||
+      !url.pathname.startsWith(scope.pathname)) return;
+  if (!(req.mode === "navigate" ||
+        ["script", "style", "image", "font", "manifest"].includes(req.destination))) return;
+
+  const network = fetch(req, {cache: "no-cache"}).then(async response => {
+    if (response.ok && response.type === "basic") {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(req, response.clone());
+      } catch (_) {}
+    }
+    return response;
+  });
+  event.waitUntil(network.then(() => {}, () => {}));
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    if (req.cache !== "reload" && req.cache !== "no-store") {
+      const cached = await cache.match(req, {ignoreSearch: req.mode === "navigate"}) ||
+        (req.mode === "navigate" ? await cache.match("./index.html") : null);
+      if (cached) return cached;
+    }
+    try { return await network; }
+    catch {
+      return await cache.match(req, {ignoreSearch: req.mode === "navigate"}) ||
+        (req.mode === "navigate" ? await cache.match("./index.html") : null) ||
+        Response.error();
     }
   })());
 });
+
 // Future Web Push transport: a server needs to subscribe each device and send the push payload.
 self.addEventListener("push",event=>{
   let payload={};
