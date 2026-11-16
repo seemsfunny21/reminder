@@ -1,5 +1,5 @@
-const CACHE_NAME = "reminder-pwa-v5";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=2","./push.js","./app.js?v=2","./manifest.webmanifest","./icon.svg"];
+const CACHE_NAME = "reminder-pwa-v6";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=3","./push.js","./app.js?v=3","./manifest.webmanifest","./icon.svg"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
