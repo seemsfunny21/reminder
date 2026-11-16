@@ -483,3 +483,93 @@ body.premium-glass {
 @media(prefers-reduced-motion:reduce) {
   .premium-glass *{animation:none!important;transition:none!important}
 }
+
+/* Quiet Blue — compact screen, no marketing text or repeated explanations. */
+.premium-glass .content-area {max-width:1000px}
+.premium-glass .topbar {
+  margin-bottom:17px;
+  padding:3px 0 13px;
+  border-bottom:1px solid rgba(90,153,234,.18);
+}
+.premium-glass .topbar h1 {font-size:clamp(25px,3vw,30px);margin:0 0 6px}
+.premium-glass .topbar p {font-size:12px;color:#9ebce0}
+.premium-glass .sidebar {background:linear-gradient(175deg,#102443,#09172b)}
+.premium-glass .brand {padding-bottom:24px}
+.premium-glass .brand-copy strong {font-size:21px}
+.premium-glass .sidebar-bottom {opacity:.5}
+.premium-glass .sidebar-bottom p{font-size:9px}
+.premium-glass .nav-link {gap:12px}
+.premium-glass .stats {gap:10px;margin:0 0 23px}
+.premium-glass .stat-card {
+  min-height:71px;padding:11px 13px;
+  border:1px solid rgba(87,160,253,.26);
+  background:linear-gradient(130deg,rgba(33,72,127,.52),rgba(17,40,75,.65));
+  box-shadow:0 6px 23px rgba(1,9,30,.11),inset 0 1px rgba(221,246,255,.07);
+}
+.premium-glass .stat-icon {width:34px;height:34px;border-radius:11px}
+.premium-glass .stat-icon svg {width:17px;height:17px}
+.premium-glass .stat-card strong {font-size:23px}
+.premium-glass .section-heading {margin-bottom:10px}
+.premium-glass .section-heading h2 {margin:0;font-size:17px}
+.premium-glass .section-count {display:none}
+.premium-glass .reminder-list {gap:8px}
+.premium-glass .reminder-card {
+  border-radius:14px;
+  border:1px solid rgba(86,158,238,.28);
+  background:linear-gradient(115deg,rgba(22,53,100,.62),rgba(12,31,61,.85));
+}
+.premium-glass .reminder-meta span:last-child {opacity:.8}
+.premium-glass .notice {
+  margin-top:14px;padding:9px 12px;
+  border:1px solid rgba(75,143,221,.32);
+  background:linear-gradient(110deg,rgba(21,53,93,.68),rgba(15,38,73,.72));
+}
+.premium-glass .notice-icon {width:32px;height:32px;border-radius:10px}
+.premium-glass .notice-icon svg {width:16px;height:16px}
+.premium-glass .notice-copy strong {font-size:12px}
+.premium-glass .notice-copy p {font-size:10px;margin-top:2px}
+.premium-glass .notice-copy p:empty {display:none}
+.premium-glass .notice.is-active .notice-icon {color:#7ce0d3;background:rgba(28,115,114,.18);border-color:rgba(90,215,198,.28)}
+.premium-glass .notice .button-outline {padding:8px 12px;font-size:11px}
+.premium-glass .utility-row {
+  justify-content:flex-end;padding:10px 0 0;
+  border-top:1px solid rgba(89,148,207,.13);
+  margin-top:14px;
+}
+.premium-glass .empty-state {padding:22px 14px;border-style:solid}
+.premium-glass .empty-icon {width:41px;height:41px;margin-bottom:8px;border-radius:12px}
+.premium-glass .empty-icon svg {width:21px;height:21px}
+.premium-glass .empty-state strong {font-size:12px;font-weight:650}
+@media(max-width:760px) {
+ .premium-glass .content-area {padding:17px 13px calc(92px + env(safe-area-inset-bottom))}
+ .premium-glass .topbar {padding:0 2px 11px;margin-bottom:12px;min-height:0}
+ .premium-glass .topbar h1 {font-size:24px;margin:0 0 3px}
+ .premium-glass .topbar p{font-size:10px}
+ .premium-glass .top-add {display:grid;width:41px;height:41px;border-radius:12px}
+ .premium-glass .stats {gap:7px;margin:0 0 18px}
+ .premium-glass .stat-card {min-height:61px;padding:8px 4px;gap:3px;border-radius:12px}
+ .premium-glass .stat-icon {width:23px;height:23px;border-radius:8px}
+ .premium-glass .stat-icon svg {width:13px;height:13px}
+ .premium-glass .stat-card strong {font-size:19px}
+ .premium-glass .stat-card div span {font-size:9px}
+ .premium-glass .section-heading h2 {font-size:16px}
+ .premium-glass .reminder-card {padding:10px;border-radius:13px}
+ .premium-glass .notice {
+   display:flex;flex-wrap:nowrap;align-items:center;
+   gap:9px;padding:10px;margin-top:13px;border-radius:12px;
+ }
+ .premium-glass .notice-icon{width:30px;height:30px}
+ .premium-glass .notice-copy{flex:1;min-width:0}
+ .premium-glass .notice-copy strong{font-size:10.5px}
+ .premium-glass .notice-copy p {font-size:9px;line-height:1.25}
+ .premium-glass .notice .button-outline {
+    margin:0;max-width:none;flex:none;white-space:nowrap;
+    padding:8px 9px;font-size:9.5px
+ }
+ .premium-glass .utility-row{margin-top:10px}
+}
+@media(max-width:350px) {
+ .premium-glass .notice{gap:6px;padding:8px}
+ .premium-glass .notice-icon{display:none}
+ .premium-glass .notice .button-outline{padding:7px 7px;font-size:9px}
+}
