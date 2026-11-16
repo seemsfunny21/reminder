@@ -12,9 +12,9 @@
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./premium.css">
+  <link rel="stylesheet" href="./premium.css?v=2">
   <script src="./push.js" defer></script>
-  <script src="./app.js" defer></script>
+  <script src="./app.js?v=2" defer></script>
 </head>
 <body class="premium-glass">
   <svg aria-hidden="true" class="svg-definitions" xmlns="http://www.w3.org/2000/svg">
@@ -41,17 +41,15 @@
     <aside class="sidebar" aria-label="Μενού εφαρμογής">
       <div class="brand">
         <span class="brand-symbol"><svg><use href="#i-bell"/></svg></span>
-        <span class="brand-copy"><strong>υπενθυμίσεις<span class="brand-period">.</span></strong><small>Η ΜΕΡΑ ΜΟΥ</small></span>
+        <span class="brand-copy"><strong>υπενθυμίσεις<span class="brand-period">.</span></strong></span>
       </div>
-      <div class="sidebar-caption">Η ΕΦΑΡΜΟΓΗ ΜΟΥ</div>
       <nav class="main-nav" aria-label="Προβολή υπενθυμίσεων">
-        <button class="nav-link active" type="button" data-filter="active"><svg><use href="#i-list"/></svg><span>Υπενθυμίσεις</span></button>
+        <button class="nav-link active" type="button" data-filter="active"><svg><use href="#i-list"/></svg><span>Όλες</span></button>
         <button class="nav-link" type="button" data-filter="today"><svg><use href="#i-calendar"/></svg><span>Σήμερα</span></button>
         <button class="nav-link" type="button" data-filter="upcoming"><svg><use href="#i-clock"/></svg><span>Προσεχώς</span></button>
-        <button class="nav-link" type="button" data-filter="completed"><svg><use href="#i-check"/></svg><span>Ολοκληρωμένες</span></button>
+        <button class="nav-link" type="button" data-filter="completed"><svg><use href="#i-check"/></svg><span>Έγιναν</span></button>
       </nav>
       <div class="sidebar-bottom">
-        <div class="side-glow"><svg><use href="#i-spark"/></svg><strong>Κάθε μέρα, πιο απλή.</strong><span>Όλα τα σημαντικά, σε ένα μέρος.</span></div>
         <p>ΥΠΕΝΘΥΜΙΣΕΙΣ <span>v1.0</span></p>
       </div>
     </aside>
@@ -59,38 +57,22 @@
     <div class="content-area">
       <header class="topbar">
         <div class="topbar-heading">
-          <div class="premium-heading-mark"><span class="premium-heading-star">✦</span> Η ΚΑΘΗΜΕΡΙΝΟΤΗΤΑ ΣΟΥ</div>
           <h1>Υπενθυμίσεις<span>.</span></h1>
           <p id="todayLabel">—</p>
         </div>
-        <button class="top-add button-primary" id="topAdd" type="button"><svg><use href="#i-plus"/></svg><span>Νέα υπενθύμιση</span></button>
+        <button class="top-add button-primary" id="topAdd" type="button" aria-label="Νέα υπενθύμιση" title="Νέα υπενθύμιση"><svg><use href="#i-plus"/></svg><span>Νέα υπενθύμιση</span></button>
       </header>
 
       <main>
-        <section class="hero" aria-label="Σύνοψη">
-          <div class="hero-shine" aria-hidden="true"></div>
-          <div class="hero-text">
-            <span class="hero-kicker"><span class="pulse-dot"></span> Η ΜΕΡΑ ΣΟΥ, ΣΕ ΤΑΞΗ</span>
-            <h2>Μικρές υπενθυμίσεις. <em>Μεγάλη διαφορά.</em></h2>
-            <p>Όλα όσα έχουν σημασία, όμορφα οργανωμένα.</p>
-            <button class="hero-button" id="heroAdd" type="button"><svg><use href="#i-plus"/></svg> Νέα υπενθύμιση</button>
-          </div>
-          <div class="hero-art" aria-hidden="true">
-            <div class="ring ring-outer"></div><div class="ring ring-middle"></div>
-            <div class="hero-bell"><svg><use href="#i-bell"/></svg></div>
-            <span class="glow-star star-one">✦</span><span class="glow-star star-two">✧</span>
-          </div>
-        </section>
-
         <section class="stats" aria-label="Στατιστικά">
           <div class="stat-card"><span class="stat-icon"><svg><use href="#i-list"/></svg></span><div><strong id="statActive">0</strong><span>Ενεργές</span></div></div>
-          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-calendar"/></svg></span><div><strong id="statToday">0</strong><span>Για σήμερα</span></div></div>
-          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-check"/></svg></span><div><strong id="statDone">0</strong><span>Ολοκληρωμένες</span></div></div>
+          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-calendar"/></svg></span><div><strong id="statToday">0</strong><span>Σήμερα</span></div></div>
+          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-check"/></svg></span><div><strong id="statDone">0</strong><span>Έγιναν</span></div></div>
         </section>
 
         <section class="reminders-section" aria-labelledby="reminderHeading">
           <div class="section-heading">
-            <div><span class="eyebrow">ΟΙ ΠΡΟΤΕΡΑΙΟΤΗΤΕΣ ΜΟΥ</span><h2 id="reminderHeading">Οι υπενθυμίσεις σου</h2></div>
+            <div><h2 id="reminderHeading">Η λίστα μου</h2></div>
             <span id="visibleCount" class="section-count">0 υπενθυμίσεις</span>
           </div>
           <div id="reminderList" class="reminder-list" aria-live="polite"></div>
@@ -98,15 +80,15 @@
 
         <section class="notice" aria-label="Κατάσταση ειδοποιήσεων">
           <div class="notice-icon"><svg><use href="#i-bell"/></svg></div>
-          <div class="notice-copy"><strong id="notificationTitle">Ειδοποιήσεις κινητού</strong>
-            <p id="notificationExplanation">Μπορείς να ενεργοποιήσεις πραγματικές Push ειδοποιήσεις, ακόμη κι όταν η εφαρμογή είναι κλειστή. Οι υπενθυμίσεις της συσκευής σου θα συγχρονίζονται με την υπηρεσία αποστολής.</p>
+          <div class="notice-copy"><strong id="notificationTitle">Ειδοποιήσεις</strong>
+            <p id="notificationExplanation"></p>
           </div>
-          <button id="enableNotifications" class="button-outline" type="button">Ενεργοποίηση / δοκιμή</button>
+          <button id="enableNotifications" class="button-outline" type="button">Ενεργοποίηση</button>
         </section>
 
-        <div class="utility-row"><span>Οι υπενθυμίσεις φυλάσσονται σε αυτήν τη συσκευή.</span>
+        <div class="utility-row">
           <div class="utility-actions">
-            <button id="exportButton" type="button"><svg><use href="#i-download"/></svg> Αντίγραφο</button>
+            <button id="exportButton" type="button"><svg><use href="#i-download"/></svg> Εξαγωγή</button>
             <button id="importButton" type="button"><svg><use href="#i-upload"/></svg> Εισαγωγή</button>
             <input id="importFile" type="file" accept=".json,application/json" hidden>
           </div>
