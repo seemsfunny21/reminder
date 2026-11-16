@@ -1,0 +1,369 @@
+/* Midnight Blue Glass – visual theme layered on top of premium.css.
+   Layout remains 50/50; logic, storage, VAPID and Web Push are unchanged. */
+body.premium-glass {
+  --bg:#081222;
+  --panel:#112b50;
+  --panel2:#18375e;
+  --stroke:#3b6190;
+  --muted:#98b4d7;
+  --blue:#4b9cff;
+  --cyan:#91d9ff;
+  --text:#f0f7ff;
+  color:#f0f7ff;
+  background:
+    radial-gradient(ellipse 740px 440px at 73% -13%,rgba(48,105,196,.33) 0%,transparent 67%),
+    linear-gradient(170deg,#0a172b 0%,#081222 56%,#081426 100%);
+}
+.premium-glass .sidebar {
+  background:linear-gradient(176deg,rgba(16,35,65,.98),rgba(7,18,37,.99));
+  border-right:1px solid rgba(112,176,246,.23);
+  box-shadow:14px 0 40px rgba(0,8,27,.16);
+}
+.premium-glass .brand {padding-bottom:28px}
+.premium-glass .brand-symbol {
+  border-radius:13px;
+  border:1px solid rgba(181,229,255,.46);
+  background:linear-gradient(145deg,#62b8ff,#2363de);
+  box-shadow:0 8px 24px rgba(30,104,229,.26),inset 0 1px rgba(245,254,255,.26);
+}
+.premium-glass .nav-link {
+  border-radius:13px;
+  transition:background-color .2s ease,color .2s ease,border-color .2s ease;
+}
+.premium-glass .nav-link:hover {background:rgba(58,112,193,.2);transform:none}
+.premium-glass .nav-link.active {
+  background:linear-gradient(106deg,rgba(34,90,172,.67),rgba(23,59,112,.55));
+  border:1px solid rgba(107,177,250,.49);
+  box-shadow:inset 3px 0 #8bd5ff,0 6px 20px rgba(10,46,105,.16);
+  color:#edf9ff;
+}
+.premium-glass .nav-link.active svg {color:#b5e8ff}
+.premium-glass .content-area {max-width:1020px}
+.premium-glass .screen-split{gap:12px}
+.premium-glass .wizard-half .topbar{
+  padding:2px 4px 10px;margin:0 0 11px;
+  border-bottom-color:rgba(114,166,227,.17);
+}
+.premium-glass .topbar h1 {
+  color:#f0f7ff;font-weight:850;
+  font-size:clamp(23px,3vw,29px);
+  letter-spacing:-.95px;
+}
+.premium-glass .topbar h1 span {color:#79c7ff}
+.premium-glass .topbar p {color:#93b2d9;font-size:11px}
+.premium-glass .top-add{
+  background:linear-gradient(145deg,#234b80,#162d56);
+  color:#aee4ff;border:1px solid rgba(110,178,253,.42);
+  border-radius:13px;
+  box-shadow:inset 0 1px rgba(235,250,255,.08);
+  width:40px;height:40px;
+  display:grid;place-items:center;padding:0;
+  flex-shrink:0;
+}
+.premium-glass .top-add svg{width:19px;height:19px}
+.premium-glass .top-add span{display:none}
+.premium-glass .top-add:hover{
+  background:linear-gradient(140deg,#2c649e,#1c497c);
+  box-shadow:0 4px 18px rgba(49,135,231,.2);
+}
+.premium-glass .quick-composer {
+  position:relative;
+  isolation:isolate;
+  overflow-x:hidden;
+  overflow-y:auto;
+  border-radius:20px;
+  border:1px solid rgba(113,179,245,.7);
+  background:
+    radial-gradient(ellipse 49% 60% at 111% -18%,rgba(99,172,255,.25),transparent 85%),
+    linear-gradient(143deg,rgba(31,69,119,.97),rgba(17,42,80,.98) 59%,rgba(10,31,58,.98));
+  box-shadow:
+    0 12px 35px rgba(0,7,31,.26),
+    inset 0 1px 0 rgba(218,242,255,.19),
+    inset 0 -1px 0 rgba(5,14,37,.2);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  animation:midnight-card-enter .57s cubic-bezier(.22,.72,.16,1) both;
+}
+.premium-glass .quick-composer:before{
+  content:"";position:absolute;
+  width:200px;height:200px;
+  right:-64px;top:-92px;
+  background:radial-gradient(circle,rgba(93,168,255,.24),transparent 69%);
+  filter:blur(12px);pointer-events:none;z-index:-1;
+}
+.premium-glass .quick-composer:after{
+  content:"";position:absolute;inset:-35% auto -35% -100%;
+  width:55%;transform:skewX(-21deg);
+  background:linear-gradient(90deg,transparent,rgba(234,252,255,.07),transparent);
+  pointer-events:none;
+  animation:midnight-shine 1.65s ease-out .35s 1 both;
+}
+.premium-glass .quick-ambient{opacity:.6}
+.premium-glass .wizard-topline{margin-bottom:8px}
+.premium-glass .wizard-progress{gap:6px}
+.premium-glass .wizard-progress i{
+  width:18px;height:4px;border-radius:999px;
+  background:rgba(112,158,216,.32);
+}
+.premium-glass .wizard-progress i.is-current{
+  width:33px;
+  background:linear-gradient(90deg,#66b9ff,#a4e4ff);
+  box-shadow:0 0 12px rgba(104,201,255,.54);
+}
+.premium-glass .wizard-progress i.is-complete{background:#4b92e8}
+.premium-glass #wizardProgress {font-size:10px;color:#a6c6e9;font-weight:800}
+.premium-glass .wizard-step.wizard-enter{
+  animation:midnight-step-in .32s cubic-bezier(.2,.78,.21,1) both;
+}
+.premium-glass .wizard-step{gap:13px}
+.premium-glass .wizard-step-icon{
+  width:38px;height:38px;border-radius:13px;
+  background:linear-gradient(144deg,rgba(75,148,249,.57),rgba(27,89,175,.6));
+  border:1px solid rgba(149,208,255,.43);
+  color:#c2ebff;
+  box-shadow:inset 0 1px rgba(255,255,255,.1),0 5px 20px rgba(23,76,165,.21);
+}
+.premium-glass .wizard-step-icon svg{width:19px;height:19px}
+.premium-glass .wizard-step h2 {
+  font-size:clamp(20px,2.7vw,27px);
+  color:#f5faff;font-weight:840;letter-spacing:-.8px;
+  line-height:1.16;text-wrap:balance;
+}
+.premium-glass #quickReminderTitle,
+.premium-glass #quickReminderDate,
+.premium-glass #quickReminderTime{
+  min-height:48px;
+  border:1px solid rgba(114,167,233,.57);
+  border-radius:12px;
+  background:rgba(8,28,56,.84);
+  color:#f3fbff;
+  box-shadow:inset 0 2px 6px rgba(0,7,25,.17);
+  padding:11px 13px;font-size:14px;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+.premium-glass #quickReminderTitle::placeholder{color:#9ab9db;opacity:1}
+.premium-glass #quickReminderTitle:focus,
+.premium-glass #quickReminderDate:focus,
+.premium-glass #quickReminderTime:focus{
+  outline:2px solid rgba(135,211,255,.7);
+  outline-offset:2px;
+  border-color:#90d5ff;
+  box-shadow:0 0 18px rgba(82,168,255,.12);
+}
+.premium-glass .wizard-selection{
+  font-size:14px;font-weight:750;color:#9bddff;
+}
+.premium-glass .quick-label{font-size:11px;color:#b4d4f8;font-weight:720}
+.premium-glass .wizard-next,
+.premium-glass .quick-save{
+  min-height:44px;
+  border:1px solid rgba(165,222,255,.46);
+  border-radius:12px;
+  background:linear-gradient(110deg,#5aaeff,#2977f3);
+  color:white;
+  font-size:12px;font-weight:800;
+  box-shadow:0 7px 22px rgba(40,121,242,.28),inset 0 1px rgba(242,251,255,.2);
+  transition:filter .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.premium-glass .wizard-next:hover,
+.premium-glass .quick-save:hover{filter:brightness(1.08);box-shadow:0 8px 24px rgba(54,137,255,.35)}
+.premium-glass .wizard-next:active,
+.premium-glass .quick-save:active{transform:scale(.98)}
+.premium-glass .wizard-back{
+  background:rgba(9,34,69,.57);
+  border:1px solid rgba(111,161,226,.38);
+  color:#c0ddf7;border-radius:11px;
+}
+.premium-glass .wizard-back:hover{background:rgba(35,85,148,.58)}
+.premium-glass .quick-countdown{
+  border:1px solid rgba(97,163,225,.34);
+  border-radius:12px;
+  background:linear-gradient(113deg,rgba(7,32,66,.84),rgba(14,43,82,.65));
+  box-shadow:inset 0 1px rgba(194,240,255,.08);
+}
+.premium-glass .quick-countdown>span{font-size:11px;color:#b8d4ef}
+.premium-glass .quick-countdown-value{
+  color:#a4e7ff;
+  font-size:clamp(24px,3.5vw,33px);
+  letter-spacing:1px;font-variant-numeric:tabular-nums;
+  text-shadow:0 0 17px rgba(95,201,255,.3);
+}
+.premium-glass .quick-more{color:#a7d1f3;text-decoration-color:rgba(132,200,247,.35)}
+.premium-glass .quick-more:hover{color:#fff}
+.premium-glass .list-half{
+  border-radius:19px;
+  border:1px solid rgba(93,149,205,.46);
+  background:linear-gradient(158deg,#122a4a 0%,#0d203b 57%,#0a1b33 100%);
+  box-shadow:0 10px 31px rgba(0,7,26,.21),inset 0 1px rgba(222,244,255,.07);
+  animation:midnight-list-enter .57s .13s cubic-bezier(.24,.74,.2,1) both;
+}
+.premium-glass .list-half-header{
+  padding:15px 16px 13px;
+  border-bottom:1px solid rgba(116,159,222,.24);
+  background:rgba(12,31,61,.33);
+}
+.premium-glass .list-header-name h2{font-size:16px;font-weight:800;letter-spacing:-.4px;color:#f2f9ff}
+.premium-glass .list-header-name .section-count{color:#93c5f0!important;font-size:10px}
+.premium-glass .list-header-icon{color:#92cbff}
+.premium-glass .list-scroll{padding:10px 11px 14px;scrollbar-color:rgba(97,163,223,.5) transparent}
+.premium-glass .reminder-list{gap:8px}
+.premium-glass .reminder-card{
+  background:linear-gradient(110deg,rgba(26,57,97,.96),rgba(19,45,78,.9));
+  border:1px solid rgba(103,157,218,.39);
+  border-radius:13px;
+  box-shadow:0 4px 14px rgba(0,9,29,.1);
+  transition:border-color .18s ease,background-color .18s ease,transform .18s ease;
+}
+.premium-glass .reminder-card:hover{
+  transform:translateY(-1px);
+  border-color:rgba(125,192,255,.72);
+}
+.premium-glass .reminder-card.is-open{
+  border-color:rgba(132,202,255,.72);
+  box-shadow:0 7px 22px rgba(0,11,36,.19);
+}
+.premium-glass .reminder-card.is-inactive{opacity:.78}
+.premium-glass .reminder-summary{
+  min-height:63px;
+  padding:11px 12px;gap:11px;
+}
+.premium-glass .reminder-summary .reminder-icon{
+  width:38px;height:38px;border-radius:11px;
+  background:rgba(47,102,172,.54);
+  border:1px solid rgba(115,169,234,.29);
+  font-size:18px;
+}
+.premium-glass .reminder-summary .reminder-title{
+  font-size:12.5px;font-weight:765;
+  color:#f2f9ff;
+}
+.premium-glass .reminder-next{color:#a4c7ee;font-size:10.5px}
+.premium-glass .reminder-chevron{color:#92d0ff}
+.premium-glass .reminder-details{
+  padding:12px 12px 13px;
+  background:rgba(8,29,55,.57);
+  animation:midnight-detail-in .24s cubic-bezier(.2,.7,.2,1) both;
+}
+.premium-glass .reminder-info dt{color:#8eafd5}
+.premium-glass .reminder-info dd{color:#e4f1ff}
+.premium-glass .detail-action{
+  background:rgba(38,83,138,.47);
+  border-color:rgba(109,173,235,.32);
+  color:#d7ecff;
+}
+.premium-glass .detail-action:hover{background:rgba(49,111,184,.55)}
+.premium-glass .empty-state{
+  border:1px dashed rgba(104,169,231,.3);
+  background:rgba(16,41,77,.57);
+}
+.premium-glass .empty-icon{
+  background:rgba(43,99,173,.26);
+  border-color:rgba(104,175,244,.38);
+}
+.premium-glass .list-settings{
+  background:rgba(14,36,68,.56);
+  border:1px solid rgba(108,167,229,.24);
+}
+.premium-glass .list-settings>summary{color:#a5c8eb}
+.premium-glass .list-settings>summary:hover{color:#ecf8ff}
+.premium-glass .list-settings .notice{
+  background:rgba(19,49,84,.72);
+  border-color:rgba(107,165,234,.3);
+}
+.premium-glass .list-settings .button-outline{
+  border:1px solid rgba(131,194,254,.4);
+  background:linear-gradient(120deg,#2d639c,#1b4576);
+}
+.premium-glass .list-settings .utility-actions button{color:#acd2f7}
+.premium-glass .list-settings .utility-actions button:hover{color:#fff}
+@keyframes midnight-card-enter{
+  from{opacity:0;transform:translateY(14px) scale(.977)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes midnight-list-enter{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes midnight-step-in{
+  from{opacity:0;transform:translateX(23px) scale(.99);filter:blur(2px)}
+  to{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}
+}
+@keyframes midnight-detail-in{
+  from{opacity:0;transform:translateY(-5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes midnight-shine{
+  0%{left:-100%;opacity:.55}
+  85%,100%{left:170%;opacity:0}
+}
+@media(max-width:760px) {
+  .premium-glass .sidebar {
+    width:calc(100% - 24px);
+    left:12px;right:12px;bottom:calc(5px + env(safe-area-inset-bottom));
+    border-radius:13px;
+    padding:5px 5px;
+    border:1px solid rgba(83,146,211,.37);
+    background:linear-gradient(130deg,rgba(12,32,62,.96),rgba(7,22,44,.96));
+    box-shadow:0 5px 28px rgba(0,10,30,.36),inset 0 1px rgba(227,248,255,.07);
+  }
+  .premium-glass .main-nav{gap:3px}
+  .premium-glass .nav-link{font-size:9px;padding:7px 1px 5px;border-radius:9px;color:#9dbfe3}
+  .premium-glass .nav-link svg{width:18px;height:18px;color:#89bce8}
+  .premium-glass .nav-link.active{
+    background:rgba(36,91,156,.44);
+    box-shadow:inset 0 2px #83d1ff;
+    border-color:rgba(105,169,240,.35);
+    color:#ccefff;
+  }
+  .premium-glass .content-area {
+    padding:11px 12px calc(71px + env(safe-area-inset-bottom));
+    height:100dvh;
+  }
+  .premium-glass .screen-split{gap:10px;grid-template-rows:minmax(0,1fr) minmax(0,1fr)}
+  .premium-glass .wizard-half .topbar{padding:3px 4px 9px;margin-bottom:9px}
+  .premium-glass .wizard-half .topbar h1{font-size:23px}
+  .premium-glass .wizard-half .topbar p{font-size:10px}
+  .premium-glass .top-add{width:36px;height:36px;border-radius:11px}
+  .premium-glass .quick-composer{border-radius:17px;padding:12px 15px}
+  .premium-glass .wizard-topline{margin-bottom:6px}
+  .premium-glass .wizard-step{gap:10px}
+  .premium-glass .wizard-step-icon{width:32px;height:32px;border-radius:10px}
+  .premium-glass .wizard-step h2{font-size:21px}
+  .premium-glass #quickReminderTitle,
+  .premium-glass #quickReminderDate,
+  .premium-glass #quickReminderTime{min-height:45px;border-radius:11px;font-size:13px}
+  .premium-glass .wizard-next,.premium-glass .quick-save{min-height:41px;font-size:12px}
+  .premium-glass .wizard-back{min-height:41px}
+  .premium-glass .quick-countdown{min-height:48px}
+  .premium-glass .quick-countdown-value{font-size:26px}
+  .premium-glass .list-half{border-radius:17px}
+  .premium-glass .list-half-header{padding:11px 13px}
+  .premium-glass .list-header-name h2{font-size:14px}
+  .premium-glass .list-header-name .section-count{font-size:9px}
+  .premium-glass .list-scroll{padding:10px 9px 10px}
+  .premium-glass .reminder-summary{min-height:57px;padding:9px 10px}
+  .premium-glass .reminder-summary .reminder-icon{width:35px;height:35px;font-size:18px}
+  .premium-glass .reminder-summary .reminder-title{font-size:12px}
+  .premium-glass .reminder-details{padding:10px 11px}
+  .premium-glass .toast{bottom:calc(85px + env(safe-area-inset-bottom))}
+}
+@media(max-height:650px) {
+  .premium-glass .quick-composer{padding-top:8px;padding-bottom:8px}
+  .premium-glass .wizard-step{gap:7px}
+  .premium-glass .wizard-step h2{font-size:18px}
+  .premium-glass .quick-countdown{min-height:44px;padding:7px 10px}
+}
+@media(max-width:350px) {
+  .premium-glass .quick-composer{padding:8px 11px}
+  .premium-glass .wizard-step h2{font-size:19px}
+  .premium-glass .list-header-name{gap:6px}
+  .premium-glass .wizard-step{gap:8px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .premium-glass .quick-composer,
+  .premium-glass .list-half,
+  .premium-glass .wizard-step.wizard-enter,
+  .premium-glass .reminder-details,
+  .premium-glass .quick-composer:after{animation:none!important}
+  .premium-glass .reminder-card:hover{transform:none}
+}
