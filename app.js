@@ -119,7 +119,7 @@
       const bt=nextOrOverdue(b,now)?.getTime() ?? Number.MAX_SAFE_INTEGER;
       return at-bt || a.title.localeCompare(b.title,"el");
     });
-    const titles={active:"Η λίστα μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Ολοκληρωμένες"};
+    const titles={active:"Οι υπενθυμίσεις μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Ολοκληρωμένες"};
     $("reminderHeading").textContent=titles[filter];
     $("visibleCount").textContent=filtered.length===1 ? "1 υπενθύμιση" : filtered.length+" υπενθυμίσεις";
     document.querySelectorAll("[data-filter]").forEach(button=>{
