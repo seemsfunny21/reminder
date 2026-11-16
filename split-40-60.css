@@ -1,0 +1,125 @@
+/* Reminder layout v1 — upper wizard 40%, reminder list 60%. */
+.premium-glass .screen-split{
+  grid-template-rows:minmax(0,2fr) minmax(0,3fr);
+}
+.premium-glass .wizard-half{overflow:hidden}
+.premium-glass .quick-composer{
+  overflow:hidden;
+}
+.premium-glass .quick-form,.premium-glass .wizard-step{min-height:0}
+.premium-glass .wizard-step:not([hidden]){justify-content:center}
+.premium-glass .list-scroll{overflow-y:auto}
+
+@media(max-width:760px){
+  .premium-glass .screen-split{
+    grid-template-rows:minmax(0,2fr) minmax(0,3fr);
+    gap:9px;
+  }
+  .premium-glass .wizard-half .topbar{
+    margin-bottom:5px;
+    padding:0 2px 4px;
+  }
+  .premium-glass .wizard-half .topbar h1{
+    font-size:20px;
+    line-height:1.1;
+    margin:0;
+  }
+  .premium-glass .wizard-half .topbar p{
+    font-size:9px;line-height:1.1;margin:2px 0 0;
+  }
+  .premium-glass .top-add{
+    width:32px;height:32px;border-radius:10px;
+  }
+  .premium-glass .quick-composer{
+    padding:8px 12px 9px;
+    border-radius:15px;
+    overflow:hidden;
+  }
+  .premium-glass .wizard-topline{
+    margin:0 0 2px;line-height:1;gap:8px;
+  }
+  .premium-glass .wizard-step{gap:6px}
+  .premium-glass .wizard-step-icon{
+    width:25px;height:25px;border-radius:9px;
+  }
+  .premium-glass .wizard-step-icon svg{
+    width:14px;height:14px;
+  }
+  .premium-glass .wizard-step h2{
+    font-size:17px;line-height:1.15;letter-spacing:-.35px;
+  }
+  .premium-glass .wizard-selection{
+    font-size:11px;line-height:1;padding:0;
+  }
+  .premium-glass .quick-label{
+    font-size:10px;line-height:1;
+  }
+  .premium-glass #quickReminderTitle,
+  .premium-glass #quickReminderDate,
+  .premium-glass #quickReminderTime{
+    min-height:36px;height:36px;
+    padding:6px 10px;
+    font-size:13px;border-radius:10px;
+  }
+  .premium-glass .wizard-next,
+  .premium-glass .quick-save,
+  .premium-glass .wizard-back{
+    min-height:35px;
+    padding:7px 12px;
+    border-radius:10px;
+    line-height:1.15;
+  }
+  .premium-glass .wizard-actions{
+    gap:8px;margin-top:0;
+  }
+  .premium-glass .quick-countdown{
+    min-height:33px;
+    padding:4px 9px;
+    gap:7px;flex-wrap:nowrap;
+  }
+  .premium-glass .quick-countdown>span{font-size:10px}
+  .premium-glass .quick-countdown-value{
+    font-size:21px;line-height:1;
+  }
+  .premium-glass .quick-countdown small{display:none}
+  .premium-glass .quick-more{
+    font-size:10px;line-height:1.15;
+  }
+  .premium-glass .wizard-step[data-step="time"] .wizard-step-icon,
+  .premium-glass .wizard-step[data-step="time"] .quick-label{
+    display:none;
+  }
+}
+@media(max-width:760px) and (max-height:700px){
+  .premium-glass .content-area{
+    padding-top:6px;
+    padding-left:9px;
+    padding-right:9px;
+  }
+  .premium-glass .wizard-half .topbar{
+    margin-bottom:3px;padding-bottom:3px;
+  }
+  .premium-glass .wizard-half .topbar h1{font-size:18px}
+  .premium-glass .wizard-half .topbar p{display:none}
+  .premium-glass .top-add{width:29px;height:29px}
+  .premium-glass .quick-composer{padding:5px 10px 6px}
+  .premium-glass .wizard-topline{margin-bottom:1px}
+  .premium-glass .wizard-step{gap:4px}
+  .premium-glass .wizard-step-icon{display:none}
+  .premium-glass .wizard-step h2{font-size:16px}
+  .premium-glass #quickReminderTitle,
+  .premium-glass #quickReminderDate,
+  .premium-glass #quickReminderTime{
+    height:32px;min-height:32px;
+  }
+  .premium-glass .wizard-next,
+  .premium-glass .quick-save,
+  .premium-glass .wizard-back{
+    min-height:31px;padding:5px 10px;
+  }
+  .premium-glass .quick-countdown{
+    min-height:28px;padding:3px 7px;
+  }
+  .premium-glass .quick-countdown-value{font-size:19px}
+  .premium-glass .quick-more{font-size:9px}
+}
