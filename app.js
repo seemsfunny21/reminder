@@ -12,6 +12,7 @@
   let reminders = loadReminders();
   let filter = "active";
   let editingId = null;
+  let expandedId = null;
   let workerRegistration = null;
   let toastTimeout;
 
@@ -107,9 +108,6 @@
   function render() {
     const now = new Date();
     $("todayLabel").textContent = now.toLocaleDateString("el-GR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-    $("statActive").textContent=reminders.filter(r=>r.enabled && !r.completed).length;
-    $("statToday").textContent=reminders.filter(r=>todayScheduled(r,now)).length;
-    $("statDone").textContent=reminders.filter(r=>r.completed).length;
     const filtered=reminders.filter(r => {
       if (filter==="completed") return r.completed;
       if (r.completed) return false;
@@ -140,102 +138,148 @@
   function cardHtml(r,now) {
     const next=nextOrOverdue(r,now);
     const overdue=r.enabled && !r.completed && r.repeat==="once" && next && next<now;
-    const state=r.completed ? "Ολοκληρώθηκε" : !r.enabled ? "Σε παύση" : overdue ? "Σε εκκρεμότητα" : "Ενεργή";
+    const state=r.completed?"Ολοκληρώθηκε":!r.enabled?"Σε παύση":overdue?"Σε εκκρεμότητα":"Ενεργή";
     const muted=r.completed || !r.enabled || overdue;
+    const open=expandedId===r.id;
     const category=CATEGORIES[r.category];
-    const when = r.enabled || r.completed ? timeLabel(next || withTime(parseDate(r.date),r.time),now) : "Σε παύση";
+    const when=r.enabled||r.completed?timeLabel(next || withTime(parseDate(r.date),r.time),now):"Σε παύση";
+    const readableDate=parseDate(r.date).toLocaleDateString("el-GR",{
+      weekday:"long",day:"numeric",month:"long",year:"numeric"
+    });
     const actionId=escapeHtml(r.id);
-    const toggleIcon=r.completed||!r.enabled?"i-play":"i-pause";
+    const detailsId="reminder-details-"+r.id.replace(/[^A-Za-z0-9_-]/g,"-");
     const toggleTitle=r.completed?"Επαναφορά":r.enabled?"Παύση":"Ενεργοποίηση";
-    return '<article class="reminder-card '+(muted?"is-inactive":"")+'">'
+    const toggleIcon=r.completed||!r.enabled?"i-play":"i-pause";
+    return '<article class="reminder-card'+(muted?" is-inactive":"")+(open?" is-open":"")+'">'
+      +'<button type="button" class="reminder-summary" data-action="details" data-id="'+actionId+'" aria-expanded="'+open+'" aria-controls="'+detailsId+'">'
       +'<span class="reminder-icon" aria-hidden="true">'+category.icon+'</span>'
-      +'<div class="reminder-content"><h3 class="reminder-title">'+escapeHtml(r.title)+'</h3>'
+      +'<span class="reminder-overview"><strong class="reminder-title">'+escapeHtml(r.title)+'</strong>'
+      +'<small class="reminder-next">'+escapeHtml(when)+'</small></span>'
+      +'<svg class="reminder-chevron" aria-hidden="true"><use href="#i-arrow"/></svg>'
+      +'</button>'
+      +'<div class="reminder-details" id="'+detailsId+'"'+(open?"":" hidden") +'>'
       +(r.notes?'<p class="reminder-notes">'+escapeHtml(r.notes)+'</p>':"")
-      +'<div class="reminder-meta"><span class="reminder-time"><svg><use href="#i-clock"/></svg>'+escapeHtml(when)+'</span>'
-      +'<span><svg><use href="#i-repeat"/></svg>'+REPEATS[r.repeat]+'</span>'
-      +'<span>'+category.label+'</span></div></div>'
-      +'<div class="reminder-actions"><span class="state-tag '+(muted?"muted":"")+'">'+state+'</span>'
-      +(r.repeat==="once"&&!r.completed?'<button class="mini-button" type="button" data-action="done" data-id="'+actionId+'" aria-label="Ολοκλήρωση" title="Ολοκλήρωση"><svg><use href="#i-check"/></svg></button>':"")
-      +'<button class="mini-button" type="button" data-action="toggle" data-id="'+actionId+'" aria-label="'+toggleTitle+'" title="'+toggleTitle+'"><svg><use href="#'+toggleIcon+'"/></svg></button>'
-      +'<button class="mini-button" type="button" data-action="edit" data-id="'+actionId+'" aria-label="Επεξεργασία" title="Επεξεργασία"><svg><use href="#i-edit"/></svg></button>'
-      +'</div></article>';
+      +'<dl class="reminder-info">'
+      +'<div><dt>Ημερομηνία</dt><dd>'+escapeHtml(readableDate)+'</dd></div>'
+      +'<div><dt>Ώρα</dt><dd>'+escapeHtml(r.time)+'</dd></div>'
+      +'<div><dt>Επανάληψη</dt><dd>'+REPEATS[r.repeat]+'</dd></div>'
+      +'<div><dt>Κατηγορία</dt><dd>'+category.label+'</dd></div>'
+      +'</dl>'
+      +'<div class="reminder-detail-actions"><span class="state-tag'+(muted?" muted":"")+'">'+state+'</span>'
+      +(r.repeat==="once"&&!r.completed?'<button class="detail-action" type="button" data-action="done" data-id="'+actionId+'"><svg><use href="#i-check"/></svg> Έγινε</button>':"")
+      +'<button class="detail-action" type="button" data-action="toggle" data-id="'+actionId+'"><svg><use href="#'+toggleIcon+'"/></svg> '+toggleTitle+'</button>'
+      +'<button class="detail-action" type="button" data-action="edit" data-id="'+actionId+'"><svg><use href="#i-edit"/></svg> Αλλαγή</button>'
+      +'</div></div></article>';
   }
 
-  // The quick composer stays open, so a reminder can be created without navigating.
-  let quickDateWasChosen=false;
+  // One card at a time. Keep the draft in its native inputs between steps.
+  const WIZARD_STEPS=["message","date","time"];
+  let wizardStep="message";
   function upcomingQuickDefault() {
-    const now=new Date();
-    const candidate=new Date(now.getTime()+60*60*1000);
+    const candidate=new Date(Date.now()+60*60*1000);
     candidate.setMinutes(Math.ceil(candidate.getMinutes()/5)*5,0,0);
     return candidate;
   }
+  function setWizardStep(step,focus=false) {
+    if(!WIZARD_STEPS.includes(step))return;
+    wizardStep=step;
+    $("quickComposer").dataset.step=step;
+    document.querySelectorAll(".wizard-step").forEach(section=>{
+      const current=section.dataset.step===step;
+      section.hidden=!current;
+      section.classList.toggle("wizard-enter",current);
+      if(current){
+        // Restart the entrance animation without delaying the user's next action.
+        section.classList.remove("wizard-enter");
+        void section.offsetWidth;
+        section.classList.add("wizard-enter");
+      }
+    });
+    const index=WIZARD_STEPS.indexOf(step);
+    $("wizardProgress").textContent=(index+1)+" / 3";
+    document.querySelectorAll(".wizard-progress i").forEach((dot,i)=>{
+      dot.classList.toggle("is-current",i===index);
+      dot.classList.toggle("is-complete",i<index);
+    });
+    if(step==="date")updateQuickDateLabel();
+    if(step==="time")updateQuickCountdown();
+    if(focus) {
+      const target=step==="message"?$("quickReminderTitle"):step==="date"?$("quickReminderDate"):$("quickReminderTime");
+      target.focus({preventScroll:true});
+    }
+  }
+  function updateQuickDateLabel(){
+    const date=parseDate($("quickReminderDate").value);
+    if(!date){$("quickDateFriendly").textContent="Επίλεξε ημερομηνία";return;}
+    const now=new Date(),today=localDate(now);
+    const tomorrow=localDate(new Date(now.getFullYear(),now.getMonth(),now.getDate()+1));
+    const name=date.toLocaleDateString("el-GR",{weekday:"long",day:"numeric",month:"long"});
+    const value=localDate(date);
+    $("quickDateFriendly").textContent=(value===today?"Σήμερα":value===tomorrow?"Αύριο":"")+" "+name;
+  }
   function resetQuickForm() {
-    const next=upcomingQuickDefault();
+    const candidate=upcomingQuickDefault();
     $("quickReminderForm").reset();
     $("quickReminderTitle").value="";
-    $("quickReminderDate").value=localDate(next);
-    $("quickReminderDate").min=localDate(new Date());
-    $("quickReminderTime").value=String(next.getHours()).padStart(2,"0")+":"+String(next.getMinutes()).padStart(2,"0");
-    quickDateWasChosen=false;
-    updateQuickCountdown();
-  }
-  function adjustQuickDateForTime() {
-    if(quickDateWasChosen)return;
-    const time=$("quickReminderTime").value;
-    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))return;
-    const now=new Date();
-    const today=localDate(now);
-    const candidate=withTime(parseDate(today),time);
-    if(candidate<=now)candidate.setDate(candidate.getDate()+1);
     $("quickReminderDate").value=localDate(candidate);
+    $("quickReminderDate").min=localDate(new Date());
+    $("quickReminderTime").value=String(candidate.getHours()).padStart(2,"0")+":"+String(candidate.getMinutes()).padStart(2,"0");
+    updateQuickDateLabel();
+    updateQuickCountdown();
+    setWizardStep("message");
   }
-  function updateQuickCountdown() {
-    const date=parseDate($("quickReminderDate").value);
-    const time=$("quickReminderTime").value;
-    const value=$("quickCountdownValue");
-    const info=$("quickCountdownLabel");
-    const group=$("quickCountdown");
-    const valid=date && /^([01]\d|2[0-3]):[0-5]\d$/.test(time);
-    group.classList.toggle("is-expired",!valid);
-    if(!valid) {
-      value.textContent="--:--";info.textContent="Επίλεξε ημερομηνία και ώρα.";
-      value.setAttribute("aria-label","Δεν έχει οριστεί ώρα");
+  function updateQuickCountdown(){
+    const date=parseDate($("quickReminderDate").value),time=$("quickReminderTime").value;
+    const value=$("quickCountdownValue"),info=$("quickCountdownLabel"),wrapper=$("quickCountdown");
+    if(!date || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){
+      wrapper.classList.add("is-expired");
+      value.textContent="--:--";info.textContent="Επίλεξε ημέρα και ώρα";
       return;
     }
     const remaining=withTime(date,time).getTime()-Date.now();
     if(remaining<=0){
-      value.textContent="00:00";
-      info.textContent="Επίλεξε μελλοντική ώρα";
-      value.setAttribute("aria-label","Η επιλεγμένη ώρα έχει περάσει");
-      group.classList.add("is-expired");
+      wrapper.classList.add("is-expired");
+      value.textContent="00:00";info.textContent="Η ώρα έχει περάσει";
       return;
     }
+    wrapper.classList.remove("is-expired");
     const minutes=Math.ceil(remaining/60000);
-    const hh=String(Math.floor(minutes/60)).padStart(2,"0");
-    const mm=String(minutes%60).padStart(2,"0");
-    value.textContent=hh+":"+mm;
+    const hours=Math.floor(minutes/60);
+    value.textContent=String(hours).padStart(2,"0")+":"+String(minutes%60).padStart(2,"0");
+    value.setAttribute("aria-label",hours+" ώρες και "+(minutes%60)+" λεπτά");
     info.textContent="ώρες : λεπτά";
-    value.setAttribute("aria-label",Math.floor(minutes/60)+" ώρες και "+(minutes%60)+" λεπτά");
   }
   function focusQuickComposer(){
-    const container=$("quickComposer");
-    container.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
-    $("quickReminderTitle").focus({preventScroll:true});
-    container.classList.remove("quick-highlight");
-    void container.offsetWidth;
-    container.classList.add("quick-highlight");
+    setWizardStep("message",true);
+    $("quickComposer").classList.remove("quick-highlight");
+    void $("quickComposer").offsetWidth;
+    $("quickComposer").classList.add("quick-highlight");
   }
-  $("quickReminderDate").addEventListener("change",()=>{
-    quickDateWasChosen=true;
-    updateQuickCountdown();
+  function nextFromMessage(){
+    if(!$("quickReminderTitle").value.trim()){
+      toast("Γράψε πρώτα τι θέλεις να θυμηθείς.");
+      $("quickReminderTitle").focus();return;
+    }
+    setWizardStep("date");
+  }
+  function nextFromDate(){
+    const date=parseDate($("quickReminderDate").value);
+    if(!date || date<parseDate(localDate(new Date()))){
+      toast("Επίλεξε σημερινή ή μελλοντική ημερομηνία.");return;
+    }
+    setWizardStep("time");
+  }
+  $("quickMessageNext").addEventListener("click",nextFromMessage);
+  $("quickReminderTitle").addEventListener("keydown",event=>{
+    if(event.key==="Enter"&&!event.isComposing){event.preventDefault();nextFromMessage();}
   });
-  $("quickReminderDate").addEventListener("input",updateQuickCountdown);
-  $("quickReminderTime").addEventListener("input",()=>{
-    adjustQuickDateForTime();updateQuickCountdown();
-  });
-  $("quickReminderTime").addEventListener("change",()=>{
-    adjustQuickDateForTime();updateQuickCountdown();
-  });
+  $("quickReminderDate").addEventListener("input",updateQuickDateLabel);
+  $("quickReminderDate").addEventListener("change",updateQuickDateLabel);
+  $("quickDateNext").addEventListener("click",nextFromDate);
+  $("quickDateBack").addEventListener("click",()=>setWizardStep("message",true));
+  $("quickTimeBack").addEventListener("click",()=>setWizardStep("date"));
+  $("quickReminderTime").addEventListener("input",updateQuickCountdown);
+  $("quickReminderTime").addEventListener("change",updateQuickCountdown);
   $("quickMore").addEventListener("click",()=>{
     openDialog();
     $("reminderTitle").value=$("quickReminderTitle").value;
@@ -245,23 +289,22 @@
   });
   $("quickReminderForm").addEventListener("submit",event=>{
     event.preventDefault();
+    if(wizardStep!=="time"){wizardStep==="message"?nextFromMessage():nextFromDate();return;}
     const title=$("quickReminderTitle").value.trim();
-    const date=$("quickReminderDate").value;
-    const time=$("quickReminderTime").value;
+    const date=$("quickReminderDate").value,time=$("quickReminderTime").value;
     const day=parseDate(date);
-    if(!title || !day || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) {
-      toast("Γράψε μια υπενθύμιση και διάλεξε ημερομηνία και ώρα.");return;
-    }
-    if(withTime(day,time).getTime()<=Date.now()){
-      updateQuickCountdown();
-      toast("Διάλεξε μελλοντική ώρα.");return;
+    if(!title){setWizardStep("message",true);toast("Γράψε το μήνυμα.");return;}
+    if(!day){setWizardStep("date");toast("Διάλεξε ημερομηνία.");return;}
+    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)||withTime(day,time).getTime()<=Date.now()){
+      updateQuickCountdown();toast("Διάλεξε μελλοντική ώρα.");return;
     }
     const record=normalize({
       id:createId(),title,date,time,notes:"",repeat:"once",category:"general",
       enabled:true,completed:false,lastFiredAt:null
     });
-    if(!record){toast("Έλεγξε τα στοιχεία σου.");return;}
+    if(!record){toast("Έλεγξε τα στοιχεία.");return;}
     reminders.push(record);
+    expandedId=null;
     persist();filter="active";render();
     resetQuickForm();
     toast("Η υπενθύμιση αποθηκεύτηκε.");
@@ -312,19 +355,22 @@
     if (!editingId) return;
     if (!confirm("Να διαγραφεί οριστικά αυτή η υπενθύμιση;")) return;
     reminders=reminders.filter(r=>r.id!==editingId);
+    expandedId=null;
     persist(); closeDialog(); render(); toast("Η υπενθύμιση διαγράφηκε.");
   });
   ["topAdd","floatingAdd"].forEach(id=>$(id).addEventListener("click",focusQuickComposer));
   ["closeDialog","cancelDialog"].forEach(id=>$(id).addEventListener("click",closeDialog));
   $("editorDialog").addEventListener("click",event=>{ if(event.target===$("editorDialog")) closeDialog(); });
   document.querySelectorAll("[data-filter]").forEach(button=>button.addEventListener("click",()=>{
-    filter=button.dataset.filter; render(); window.scrollTo({top:0,behavior:"smooth"});
+    filter=button.dataset.filter; expandedId=null; render();
+    const pane=document.querySelector(".list-scroll");if(pane)pane.scrollTop=0;
   }));
   $("reminderList").addEventListener("click",event=>{
     const button=event.target.closest("button[data-action]");
     if (!button) return;
     const action=button.dataset.action, id=button.dataset.id;
-    if (action==="new") { openDialog(); return; }
+    if (action==="new") { focusQuickComposer(); return; }
+    if (action==="details") {expandedId=expandedId===id?null:id;render();return;}
     const r=reminders.find(item=>item.id===id);
     if (!r) return;
     if (action==="edit") { openDialog(id); return; }
