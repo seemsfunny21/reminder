@@ -12,10 +12,11 @@
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./premium.css">
   <script src="./push.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
-<body>
+<body class="premium-glass">
   <svg aria-hidden="true" class="svg-definitions" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -50,7 +51,7 @@
         <button class="nav-link" type="button" data-filter="completed"><svg><use href="#i-check"/></svg><span>Ολοκληρωμένες</span></button>
       </nav>
       <div class="sidebar-bottom">
-        <div class="side-glow"><svg><use href="#i-spark"/></svg><strong>Μικρές υπενθυμίσεις.<br>Μεγάλη διαφορά.</strong><span>Η καθημερινότητά σου, οργανωμένη.</span></div>
+        <div class="side-glow"><svg><use href="#i-spark"/></svg><strong>Κάθε μέρα, πιο απλή.</strong><span>Όλα τα σημαντικά, σε ένα μέρος.</span></div>
         <p>REMINDER PWA <span>v1.0</span></p>
       </div>
     </aside>
@@ -58,8 +59,8 @@
     <div class="content-area">
       <header class="topbar">
         <div class="topbar-heading">
-          <span class="eyebrow">ΗΜΕΡΗΣΙΟΣ ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΣ</span>
-          <h1>Οι υπενθυμίσεις μου<span>.</span></h1>
+          <div class="premium-heading-mark"><span class="premium-heading-star">✦</span> Η ΚΑΘΗΜΕΡΙΝΟΤΗΤΑ ΣΟΥ</div>
+          <h1>Reminder<span>.</span></h1>
           <p id="todayLabel">—</p>
         </div>
         <button class="top-add button-primary" id="topAdd" type="button"><svg><use href="#i-plus"/></svg><span>Νέα υπενθύμιση</span></button>
@@ -67,17 +68,17 @@
 
       <main>
         <section class="hero" aria-label="Σύνοψη">
-          <div class="hero-shine"></div>
+          <div class="hero-shine" aria-hidden="true"></div>
           <div class="hero-text">
-            <span class="hero-kicker"><span class="pulse-dot"></span> Ο ΠΡΟΣΩΠΙΚΟΣ ΣΟΥ ΧΩΡΟΣ</span>
-            <h2>Μην ξεχάσεις<br><em>τίποτα σημαντικό.</em></h2>
-            <p>Οργάνωσε όσα χρειάζεσαι και κράτησε τη μέρα σου υπό έλεγχο.</p>
-            <button class="hero-button" id="heroAdd" type="button">Προσθήκη υπενθύμισης <svg><use href="#i-arrow"/></svg></button>
+            <span class="hero-kicker"><span class="pulse-dot"></span> Η ΜΕΡΑ ΣΟΥ, ΣΕ ΤΑΞΗ</span>
+            <h2>Μικρές υπενθυμίσεις. <em>Μεγάλη διαφορά.</em></h2>
+            <p>Όλα όσα έχουν σημασία, όμορφα οργανωμένα.</p>
+            <button class="hero-button" id="heroAdd" type="button"><svg><use href="#i-plus"/></svg> Νέα υπενθύμιση</button>
           </div>
           <div class="hero-art" aria-hidden="true">
-            <div class="ring ring-outer"></div><div class="ring ring-middle"></div><div class="ring ring-inner"></div>
+            <div class="ring ring-outer"></div><div class="ring ring-middle"></div>
             <div class="hero-bell"><svg><use href="#i-bell"/></svg></div>
-            <span class="glow-star star-one">✦</span><span class="glow-star star-two">✦</span><span class="glow-star star-three">✧</span>
+            <span class="glow-star star-one">✦</span><span class="glow-star star-two">✧</span>
           </div>
         </section>
 
@@ -89,7 +90,7 @@
 
         <section class="reminders-section" aria-labelledby="reminderHeading">
           <div class="section-heading">
-            <div><span class="eyebrow">ΣΕ ΠΡΩΤΟ ΠΛΑΝΟ</span><h2 id="reminderHeading">Οι υπενθυμίσεις σου</h2></div>
+            <div><span class="eyebrow">ΟΙ ΠΡΟΤΕΡΑΙΟΤΗΤΕΣ ΜΟΥ</span><h2 id="reminderHeading">Οι υπενθυμίσεις σου</h2></div>
             <span id="visibleCount" class="section-count">0 υπενθυμίσεις</span>
           </div>
           <div id="reminderList" class="reminder-list" aria-live="polite"></div>
