@@ -98,8 +98,15 @@
     if (sameDay(date,tomorrow)) return "Αύριο, "+hm;
     return date.toLocaleDateString("el-GR",{weekday:"short",day:"numeric",month:"short"})+" • "+hm;
   }
+  // Past one-off reminders belong in the history automatically, even if the
+  // user did not manually mark the underlying task as completed.
+  // Keep completed=false so we never claim a task was actually performed.
+  function isPastOneTime(reminder,now) {
+    return reminder.enabled && !reminder.completed && reminder.repeat==="once"
+      && withTime(parseDate(reminder.date),reminder.time).getTime() <= now.getTime();
+  }
   function todayScheduled(reminder,now) {
-    return reminder.enabled && !reminder.completed && !!occurrenceOn(reminder,now);
+    return reminder.enabled && !reminder.completed && !isPastOneTime(reminder,now) && !!occurrenceOn(reminder,now);
   }
   function toast(message) {
     const el=$("toast"); el.textContent=message; el.classList.add("show");
@@ -109,8 +116,9 @@
     const now = new Date();
     $("todayLabel").textContent = now.toLocaleDateString("el-GR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
     const filtered=reminders.filter(r => {
-      if (filter==="completed") return r.completed;
-      if (r.completed) return false;
+      const pastOnce=isPastOneTime(r,now);
+      if (filter==="completed") return r.completed || pastOnce;
+      if (r.completed || pastOnce) return false;
       if (filter==="today") return todayScheduled(r,now);
       if (filter==="upcoming") return !!nextOccurrence(r,now);
       return true;
@@ -119,7 +127,7 @@
       const bt=nextOrOverdue(b,now)?.getTime() ?? Number.MAX_SAFE_INTEGER;
       return at-bt || a.title.localeCompare(b.title,"el");
     });
-    const titles={active:"Οι υπενθυμίσεις μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Ολοκληρωμένες"};
+    const titles={active:"Οι υπενθυμίσεις μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Έγιναν / Πέρασαν"};
     $("reminderHeading").textContent=titles[filter];
     $("visibleCount").textContent=filtered.length===1 ? "1 υπενθύμιση" : filtered.length+" υπενθυμίσεις";
     document.querySelectorAll("[data-filter]").forEach(button=>{
@@ -129,7 +137,7 @@
       else button.removeAttribute("aria-current");
     });
     if (!filtered.length) {
-      const messages={active:"Δεν έχεις υπενθυμίσεις",today:"Τίποτα για σήμερα",upcoming:"Δεν υπάρχουν επόμενες",completed:"Καμία ολοκληρωμένη"};
+      const messages={active:"Δεν έχεις υπενθυμίσεις",today:"Τίποτα για σήμερα",upcoming:"Δεν υπάρχουν επόμενες",completed:"Καμία περασμένη υπενθύμιση"};
       $("reminderList").innerHTML='<div class="empty-state"><span class="empty-icon"><svg><use href="#i-bell"/></svg></span><strong>'+messages[filter]+'</strong></div>';
       return;
     }
@@ -138,7 +146,7 @@
   function cardHtml(r,now) {
     const next=nextOrOverdue(r,now);
     const overdue=r.enabled && !r.completed && r.repeat==="once" && next && next<now;
-    const state=r.completed?"Ολοκληρώθηκε":!r.enabled?"Σε παύση":overdue?"Σε εκκρεμότητα":"Ενεργή";
+    const state=r.completed?"Ολοκληρώθηκε":!r.enabled?"Σε παύση":overdue?"Πέρασε η ώρα":"Ενεργή";
     const muted=r.completed || !r.enabled || overdue;
     const open=expandedId===r.id;
     const category=CATEGORIES[r.category];
