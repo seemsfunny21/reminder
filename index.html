@@ -12,9 +12,9 @@
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./premium.css?v=2">
+  <link rel="stylesheet" href="./premium.css?v=3">
   <script src="./push.js" defer></script>
-  <script src="./app.js?v=2" defer></script>
+  <script src="./app.js?v=3" defer></script>
 </head>
 <body class="premium-glass">
   <svg aria-hidden="true" class="svg-definitions" xmlns="http://www.w3.org/2000/svg">
@@ -64,6 +64,39 @@
       </header>
 
       <main>
+
+        <section class="quick-composer" id="quickComposer" aria-labelledby="quickHeading">
+          <div class="quick-ambient" aria-hidden="true"></div>
+          <div class="quick-header">
+            <span class="quick-heading-icon" aria-hidden="true"><svg><use href="#i-bell"/></svg></span>
+            <h2 id="quickHeading">Νέα υπενθύμιση</h2>
+            <span class="quick-header-glow" aria-hidden="true">✦</span>
+          </div>
+          <form id="quickReminderForm" class="quick-form" autocomplete="off">
+            <label for="quickReminderTitle" class="quick-label">Τι να σου θυμίσω;</label>
+            <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Γράψε την υπενθύμισή σου…" required>
+            <div class="quick-inputs">
+              <div class="quick-input">
+                <label for="quickReminderDate"><svg><use href="#i-calendar"/></svg> Ημερομηνία</label>
+                <input id="quickReminderDate" type="date" required>
+              </div>
+              <div class="quick-input">
+                <label for="quickReminderTime"><svg><use href="#i-clock"/></svg> Ώρα</label>
+                <input id="quickReminderTime" type="time" required>
+              </div>
+            </div>
+            <div class="quick-countdown" id="quickCountdown" role="status" aria-live="off">
+              <span class="quick-countdown-icon" aria-hidden="true"><svg><use href="#i-clock"/></svg></span>
+              <div class="quick-countdown-copy"><span>Απομένουν</span><small id="quickCountdownLabel">ώρες : λεπτά</small></div>
+              <strong id="quickCountdownValue" class="quick-countdown-value" aria-label="Χρόνος που απομένει">01:00</strong>
+            </div>
+            <div class="quick-actions">
+              <button id="quickMore" class="quick-more" type="button"><svg><use href="#i-settings"/></svg> Περισσότερες επιλογές</button>
+              <button id="quickSave" class="button-primary quick-save" type="submit"><svg><use href="#i-check"/></svg> Αποθήκευση</button>
+            </div>
+          </form>
+        </section>
+
         <section class="stats" aria-label="Στατιστικά">
           <div class="stat-card"><span class="stat-icon"><svg><use href="#i-list"/></svg></span><div><strong id="statActive">0</strong><span>Ενεργές</span></div></div>
           <div class="stat-card"><span class="stat-icon"><svg><use href="#i-calendar"/></svg></span><div><strong id="statToday">0</strong><span>Σήμερα</span></div></div>
