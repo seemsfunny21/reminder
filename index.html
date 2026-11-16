@@ -12,9 +12,9 @@
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./premium.css?v=3">
+  <link rel="stylesheet" href="./premium.css?v=4">
   <script src="./push.js" defer></script>
-  <script src="./app.js?v=4" defer></script>
+  <script src="./app.js?v=5" defer></script>
 </head>
 <body class="premium-glass">
   <svg aria-hidden="true" class="svg-definitions" xmlns="http://www.w3.org/2000/svg">
@@ -54,78 +54,88 @@
       </div>
     </aside>
 
+
     <div class="content-area">
-      <header class="topbar">
-        <div class="topbar-heading">
-          <h1>Υπενθυμίσεις<span>.</span></h1>
-          <p id="todayLabel">—</p>
-        </div>
-        <button class="top-add button-primary" id="topAdd" type="button" aria-label="Νέα υπενθύμιση" title="Νέα υπενθύμιση"><svg><use href="#i-plus"/></svg><span>Νέα υπενθύμιση</span></button>
-      </header>
-
-      <main>
-
-        <section class="quick-composer" id="quickComposer" aria-labelledby="quickHeading">
-          <div class="quick-ambient" aria-hidden="true"></div>
-          <div class="quick-header">
-            <span class="quick-heading-icon" aria-hidden="true"><svg><use href="#i-bell"/></svg></span>
-            <h2 id="quickHeading">Νέα υπενθύμιση</h2>
-            <span class="quick-header-glow" aria-hidden="true">✦</span>
-          </div>
-          <form id="quickReminderForm" class="quick-form" autocomplete="off">
-            <label for="quickReminderTitle" class="quick-label">Τι να σου θυμίσω;</label>
-            <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Γράψε την υπενθύμισή σου…" required>
-            <div class="quick-inputs">
-              <div class="quick-input">
-                <label for="quickReminderDate"><svg><use href="#i-calendar"/></svg> Ημερομηνία</label>
+      <main class="screen-split">
+        <section class="wizard-half" aria-label="Δημιουργία υπενθύμισης">
+          <header class="topbar">
+            <div class="topbar-heading">
+              <h1>Υπενθυμίσεις<span>.</span></h1>
+              <p id="todayLabel">—</p>
+            </div>
+            <button class="top-add button-primary" id="topAdd" type="button" aria-label="Νέα υπενθύμιση" title="Νέα υπενθύμιση"><svg><use href="#i-plus"/></svg><span>Νέα</span></button>
+          </header>
+          <section class="quick-composer" id="quickComposer" aria-labelledby="quickHeading">
+            <div class="quick-ambient" aria-hidden="true"></div>
+            <div class="wizard-topline">
+              <div class="wizard-progress" aria-hidden="true"><i class="is-current"></i><i></i><i></i></div>
+              <span id="wizardProgress">1 / 3</span>
+            </div>
+            <form id="quickReminderForm" class="quick-form" autocomplete="off" novalidate>
+              <section class="wizard-step" data-step="message" aria-labelledby="quickHeading">
+                <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-bell"/></svg></span>
+                <h2 id="quickHeading">Γράψε υπενθύμιση</h2>
+                <label class="sr-only" for="quickReminderTitle">Τι να σου θυμίσω;</label>
+                <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Τι θέλεις να θυμηθείς;" enterkeyhint="next" required>
+                <button id="quickMessageNext" class="button-primary wizard-next" type="button">Επόμενο <svg><use href="#i-arrow"/></svg></button>
+              </section>
+              <section class="wizard-step" data-step="date" aria-labelledby="quickDateHeading" hidden>
+                <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-calendar"/></svg></span>
+                <h2 id="quickDateHeading">Ποια ημέρα;</h2>
+                <p class="wizard-selection" id="quickDateFriendly">Σήμερα</p>
+                <label for="quickReminderDate" class="quick-label">Ημερομηνία</label>
                 <input id="quickReminderDate" type="date" required>
-              </div>
-              <div class="quick-input">
-                <label for="quickReminderTime"><svg><use href="#i-clock"/></svg> Ώρα</label>
+                <div class="wizard-actions">
+                  <button id="quickDateBack" class="wizard-back" type="button"><svg><use href="#i-arrow"/></svg> Πίσω</button>
+                  <button id="quickDateNext" class="button-primary wizard-next" type="button">Επόμενο <svg><use href="#i-arrow"/></svg></button>
+                </div>
+              </section>
+              <section class="wizard-step" data-step="time" aria-labelledby="quickTimeHeading" hidden>
+                <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-clock"/></svg></span>
+                <h2 id="quickTimeHeading">Τι ώρα;</h2>
+                <label for="quickReminderTime" class="quick-label">Ώρα υπενθύμισης</label>
                 <input id="quickReminderTime" type="time" required>
+                <div class="quick-countdown" id="quickCountdown" role="status" aria-live="off">
+                  <span>Απομένουν</span>
+                  <strong id="quickCountdownValue" class="quick-countdown-value" aria-label="Χρόνος που απομένει">--:--</strong>
+                  <small id="quickCountdownLabel">ώρες : λεπτά</small>
+                </div>
+                <div class="wizard-actions">
+                  <button id="quickTimeBack" class="wizard-back" type="button"><svg><use href="#i-arrow"/></svg> Πίσω</button>
+                  <button id="quickSave" class="button-primary quick-save" type="submit"><svg><use href="#i-check"/></svg> Αποθήκευση</button>
+                </div>
+                <button id="quickMore" class="quick-more" type="button">Περισσότερες επιλογές</button>
+              </section>
+            </form>
+          </section>
+        </section>
+        <section class="list-half" aria-labelledby="reminderHeading">
+          <div class="list-half-header">
+            <div class="list-header-name">
+              <h2 id="reminderHeading">Η λίστα μου</h2>
+              <span id="visibleCount" class="section-count">0 υπενθυμίσεις</span>
+            </div>
+            <span class="list-header-icon" aria-hidden="true"><svg><use href="#i-list"/></svg></span>
+          </div>
+          <div class="list-scroll">
+            <div id="reminderList" class="reminder-list" aria-live="polite"></div>
+            <details class="list-settings">
+              <summary><svg><use href="#i-settings"/></svg> Ρυθμίσεις &amp; αντίγραφα</summary>
+              <section class="notice" aria-label="Κατάσταση ειδοποιήσεων">
+                <div class="notice-icon"><svg><use href="#i-bell"/></svg></div>
+                <div class="notice-copy"><strong id="notificationTitle">Ειδοποιήσεις</strong><p id="notificationExplanation"></p></div>
+                <button id="enableNotifications" class="button-outline" type="button">Ενεργοποίηση</button>
+              </section>
+              <div class="utility-row">
+                <div class="utility-actions">
+                  <button id="exportButton" type="button"><svg><use href="#i-download"/></svg> Εξαγωγή</button>
+                  <button id="importButton" type="button"><svg><use href="#i-upload"/></svg> Εισαγωγή</button>
+                  <input id="importFile" type="file" accept=".json,application/json" hidden>
+                </div>
               </div>
-            </div>
-            <div class="quick-countdown" id="quickCountdown" role="status" aria-live="off">
-              <span class="quick-countdown-icon" aria-hidden="true"><svg><use href="#i-clock"/></svg></span>
-              <div class="quick-countdown-copy"><span>Απομένουν</span><small id="quickCountdownLabel">ώρες : λεπτά</small></div>
-              <strong id="quickCountdownValue" class="quick-countdown-value" aria-label="Χρόνος που απομένει">01:00</strong>
-            </div>
-            <div class="quick-actions">
-              <button id="quickMore" class="quick-more" type="button"><svg><use href="#i-settings"/></svg> Περισσότερες επιλογές</button>
-              <button id="quickSave" class="button-primary quick-save" type="submit"><svg><use href="#i-check"/></svg> Αποθήκευση</button>
-            </div>
-          </form>
-        </section>
-
-        <section class="stats" aria-label="Στατιστικά">
-          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-list"/></svg></span><div><strong id="statActive">0</strong><span>Ενεργές</span></div></div>
-          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-calendar"/></svg></span><div><strong id="statToday">0</strong><span>Σήμερα</span></div></div>
-          <div class="stat-card"><span class="stat-icon"><svg><use href="#i-check"/></svg></span><div><strong id="statDone">0</strong><span>Έγιναν</span></div></div>
-        </section>
-
-        <section class="reminders-section" aria-labelledby="reminderHeading">
-          <div class="section-heading">
-            <div><h2 id="reminderHeading">Η λίστα μου</h2></div>
-            <span id="visibleCount" class="section-count">0 υπενθυμίσεις</span>
+            </details>
           </div>
-          <div id="reminderList" class="reminder-list" aria-live="polite"></div>
         </section>
-
-        <section class="notice" aria-label="Κατάσταση ειδοποιήσεων">
-          <div class="notice-icon"><svg><use href="#i-bell"/></svg></div>
-          <div class="notice-copy"><strong id="notificationTitle">Ειδοποιήσεις</strong>
-            <p id="notificationExplanation"></p>
-          </div>
-          <button id="enableNotifications" class="button-outline" type="button">Ενεργοποίηση</button>
-        </section>
-
-        <div class="utility-row">
-          <div class="utility-actions">
-            <button id="exportButton" type="button"><svg><use href="#i-download"/></svg> Εξαγωγή</button>
-            <button id="importButton" type="button"><svg><use href="#i-upload"/></svg> Εισαγωγή</button>
-            <input id="importFile" type="file" accept=".json,application/json" hidden>
-          </div>
-        </div>
       </main>
     </div>
   </div>
