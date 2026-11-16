@@ -367,3 +367,205 @@ body.premium-glass {
   .premium-glass .quick-composer:after{animation:none!important}
   .premium-glass .reminder-card:hover{transform:none}
 }
+
+
+/* Centered composition: a consistent visual axis in both viewport halves. */
+.premium-glass .brand {justify-content:center;padding-left:0;padding-right:0}
+.premium-glass .main-nav .nav-link {
+  justify-content:center;
+  text-align:center;
+  padding-left:11px;
+  padding-right:11px;
+}
+.premium-glass .wizard-half .topbar{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 42px;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-align:center;
+}
+.premium-glass .wizard-half .topbar-heading{
+  grid-column:2;
+  min-width:0;
+  text-align:center;
+}
+.premium-glass .wizard-half .topbar .top-add{
+  grid-column:3;
+  justify-self:end;
+}
+.premium-glass .wizard-half .topbar h1,
+.premium-glass .wizard-half .topbar p {
+  text-align:center;
+}
+.premium-glass .wizard-topline{
+  justify-content:center;
+  gap:11px;
+}
+.premium-glass #wizardProgress{margin:0}
+.premium-glass .wizard-step:not([hidden]){
+  align-items:center;
+  text-align:center;
+}
+.premium-glass .wizard-step-icon{margin-inline:auto}
+.premium-glass .wizard-step h2,
+.premium-glass .wizard-selection,
+.premium-glass .quick-label {
+  width:100%;
+  text-align:center;
+}
+.premium-glass #quickReminderTitle,
+.premium-glass #quickReminderDate,
+.premium-glass #quickReminderTime{
+  text-align:center;
+  text-align-last:center;
+  width:100%;
+}
+.premium-glass #quickReminderDate,
+.premium-glass #quickReminderTime{
+  direction:ltr;
+}
+.premium-glass .wizard-next{
+  align-self:center;
+}
+.premium-glass .wizard-actions{
+  width:100%;
+  justify-content:center;
+  gap:11px;
+}
+.premium-glass .wizard-actions .wizard-next,
+.premium-glass .wizard-actions .quick-save,
+.premium-glass .wizard-actions .wizard-back{
+  flex:0 1 auto;
+  min-width:0;
+}
+.premium-glass .quick-countdown{
+  justify-content:center;
+  gap:9px;
+  width:100%;
+}
+.premium-glass .quick-countdown-value{
+  margin-left:0;
+}
+.premium-glass .quick-countdown small{
+  text-align:center;
+  margin-top:0;
+}
+.premium-glass .list-half-header{
+  position:relative;
+  justify-content:center;
+  text-align:center;
+  padding-right:38px;
+  padding-left:38px;
+}
+.premium-glass .list-header-name{
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  width:100%;
+  text-align:center;
+}
+.premium-glass .list-header-name h2,
+.premium-glass .list-header-name .section-count{
+  text-align:center;
+}
+.premium-glass .list-header-icon{
+  position:absolute;
+  right:13px;
+  top:50%;
+  transform:translateY(-50%);
+  display:grid;
+  place-items:center;
+}
+.premium-glass .reminder-summary {
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 18px;
+  gap:10px;
+  align-items:center;
+  text-align:center;
+}
+.premium-glass .reminder-summary .reminder-icon{
+  grid-column:1;
+  justify-self:center;
+}
+.premium-glass .reminder-overview{
+  grid-column:2;
+  text-align:center;
+  align-items:center;
+  width:100%;
+}
+.premium-glass .reminder-summary .reminder-title,
+.premium-glass .reminder-next{
+  max-width:100%;
+  width:100%;
+  text-align:center;
+}
+.premium-glass .reminder-chevron{
+  grid-column:3;
+  justify-self:end;
+}
+.premium-glass .reminder-details{
+  text-align:center;
+}
+.premium-glass .reminder-info{
+  text-align:center;
+}
+.premium-glass .reminder-info dt,
+.premium-glass .reminder-info dd{
+  text-align:center;
+}
+.premium-glass .reminder-detail-actions{
+  justify-content:center;
+}
+.premium-glass .reminder-detail-actions .state-tag{
+  margin:0;
+}
+.premium-glass .list-settings>summary{
+  justify-content:center;
+  text-align:center;
+}
+.premium-glass .list-settings .notice{
+  justify-content:center;
+}
+.premium-glass .list-settings .notice-copy,
+.premium-glass .list-settings .notice-copy p{
+  text-align:center;
+}
+.premium-glass .list-settings .utility-row,
+.premium-glass .list-settings .utility-actions{
+  justify-content:center;
+}
+@media(max-width:760px){
+  .premium-glass .wizard-half .topbar{
+    grid-template-columns:36px minmax(0,1fr) 36px;
+    padding-left:2px;
+    padding-right:2px;
+  }
+  .premium-glass .wizard-step:not([hidden]){
+    align-items:center;
+    text-align:center;
+  }
+  .premium-glass .reminder-summary{
+    grid-template-columns:35px minmax(0,1fr) 16px;
+    gap:7px;
+  }
+  .premium-glass .list-half-header{
+    padding-left:31px;
+    padding-right:31px;
+  }
+  .premium-glass .wizard-actions{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+  }
+}
+@media(max-width:350px){
+  .premium-glass .wizard-half .topbar{
+    grid-template-columns:35px minmax(0,1fr) 35px;
+  }
+  .premium-glass .reminder-summary{
+    grid-template-columns:31px minmax(0,1fr) 15px;
+    gap:6px;
+  }
+}
