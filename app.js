@@ -121,7 +121,7 @@
       const bt=nextOrOverdue(b,now)?.getTime() ?? Number.MAX_SAFE_INTEGER;
       return at-bt || a.title.localeCompare(b.title,"el");
     });
-    const titles={active:"Οι υπενθυμίσεις σου",today:"Για σήμερα",upcoming:"Προσεχείς υπενθυμίσεις",completed:"Ολοκληρωμένες"};
+    const titles={active:"Η λίστα μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Ολοκληρωμένες"};
     $("reminderHeading").textContent=titles[filter];
     $("visibleCount").textContent=filtered.length===1 ? "1 υπενθύμιση" : filtered.length+" υπενθυμίσεις";
     document.querySelectorAll("[data-filter]").forEach(button=>{
@@ -131,14 +131,8 @@
       else button.removeAttribute("aria-current");
     });
     if (!filtered.length) {
-      const messages={
-        active:["Όλα ξεκινούν από μία υπενθύμιση","Πρόσθεσε την πρώτη σου για να οργανώσεις τη μέρα σου."],
-        today:["Έχεις ελεύθερη μέρα!","Δεν υπάρχει προγραμματισμένη υπενθύμιση για σήμερα."],
-        upcoming:["Δεν υπάρχουν επόμενες υπενθυμίσεις","Πρόσθεσε μία νέα ή ενεργοποίησε κάποια που βρίσκεται σε παύση."],
-        completed:["Δεν έχει ολοκληρωθεί κάτι ακόμη","Οι μεμονωμένες υπενθυμίσεις που σημειώνεις ως ολοκληρωμένες θα εμφανίζονται εδώ."]
-      };
-      const msg=messages[filter];
-      $("reminderList").innerHTML='<div class="empty-state"><span class="empty-icon"><svg><use href="#i-bell"/></svg></span><strong>'+msg[0]+'</strong><p>'+msg[1]+'</p><button class="button-primary" type="button" data-action="new"><svg><use href="#i-plus"/></svg> Νέα υπενθύμιση</button></div>';
+      const messages={active:"Δεν έχεις υπενθυμίσεις",today:"Τίποτα για σήμερα",upcoming:"Δεν υπάρχουν επόμενες",completed:"Καμία ολοκληρωμένη"};
+      $("reminderList").innerHTML='<div class="empty-state"><span class="empty-icon"><svg><use href="#i-bell"/></svg></span><strong>'+messages[filter]+'</strong></div>';
       return;
     }
     $("reminderList").innerHTML=filtered.map(r=>cardHtml(r,now)).join("");
@@ -211,7 +205,7 @@
     reminders=reminders.filter(r=>r.id!==editingId);
     persist(); closeDialog(); render(); toast("Η υπενθύμιση διαγράφηκε.");
   });
-  ["topAdd","heroAdd","floatingAdd"].forEach(id=>$(id).addEventListener("click",()=>openDialog()));
+  ["topAdd","floatingAdd"].forEach(id=>$(id).addEventListener("click",()=>openDialog()));
   ["closeDialog","cancelDialog"].forEach(id=>$(id).addEventListener("click",closeDialog));
   $("editorDialog").addEventListener("click",event=>{ if(event.target===$("editorDialog")) closeDialog(); });
   document.querySelectorAll("[data-filter]").forEach(button=>button.addEventListener("click",()=>{
@@ -267,14 +261,11 @@
   function updatePermissionUI(){
     const push=window.ReminderPush;
     const active=!!push?.isActive();
-    const permission="Notification" in window && Notification.permission==="granted";
-    $("enableNotifications").textContent=active ? "Δοκιμή Push" : "Ενεργοποίηση Push";
-    $("notificationTitle").textContent=active ? "Push ενεργό σε αυτή τη συσκευή" : "Ειδοποιήσεις κινητού";
-    $("notificationExplanation").textContent=active
-      ? "Οι υπενθυμίσεις αυτής της συσκευής έχουν συνδεθεί με το Supabase. Θα αποστέλλονται στο κινητό ακόμη και με κλειστή εφαρμογή, εφόσον επιτρέπονται οι ειδοποιήσεις και η συσκευή έχει σύνδεση."
-      : push?.supported()
-      ? "Πάτησε Ενεργοποίηση Push και επίτρεψε τις ειδοποιήσεις. Οι υπενθυμίσεις θα αποστέλλονται από το Supabase ακόμη κι όταν η εφαρμογή είναι κλειστή."
-      : "Οι Web Push ειδοποιήσεις δεν υποστηρίζονται σε αυτή τη λειτουργία του browser. Στο iPhone απαιτείται εγκατάσταση στην αρχική οθόνη (iOS 16.4+).";
+    $("enableNotifications").textContent=active ? "Δοκιμή" : "Ενεργοποίηση";
+    $("notificationTitle").textContent=active ? "Push ενεργό" : "Ειδοποιήσεις";
+    $("notificationExplanation").textContent=active ? "" :
+      push?.supported() ? "Λήψη ακόμη και με κλειστή εφαρμογή." : "Δεν υποστηρίζονται σε αυτόν τον browser.";
+    $("notificationTitle").closest(".notice")?.classList.toggle("is-active",active);
   }
   window.addEventListener("reminderpushstate",event=>{
     updatePermissionUI();
@@ -289,7 +280,7 @@
     try {
       if(wasActive) await window.ReminderPush.test();
       else await window.ReminderPush.enable(reminders);
-      toast("Η ειδοποίηση Push στάλθηκε από το Supabase. Έλεγξε τη συσκευή σου.");
+      toast(wasActive ? "Η δοκιμή στάλθηκε." : "Το Push ενεργοποιήθηκε.");
     } catch(error) {
       console.error("Remote push failed",error);
       toast(error?.message || "Η ενεργοποίηση Push απέτυχε.");
