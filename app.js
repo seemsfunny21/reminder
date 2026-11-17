@@ -180,50 +180,11 @@
       +'</div></div></article>';
   }
 
-  // One card at a time. Keep the draft in its native inputs between steps.
-  const WIZARD_STEPS=["message","date","time"];
-  let wizardStep="message";
+  // Quick reminder: all essential fields on one screen, no duplicated steps.
   function upcomingQuickDefault() {
     const candidate=new Date(Date.now()+60*60*1000);
     candidate.setMinutes(Math.ceil(candidate.getMinutes()/5)*5,0,0);
     return candidate;
-  }
-  function setWizardStep(step,focus=false) {
-    if(!WIZARD_STEPS.includes(step))return;
-    wizardStep=step;
-    $("quickComposer").dataset.step=step;
-    document.querySelectorAll(".wizard-step").forEach(section=>{
-      const current=section.dataset.step===step;
-      section.hidden=!current;
-      section.classList.toggle("wizard-enter",current);
-      if(current){
-        // Restart the entrance animation without delaying the user's next action.
-        section.classList.remove("wizard-enter");
-        void section.offsetWidth;
-        section.classList.add("wizard-enter");
-      }
-    });
-    const index=WIZARD_STEPS.indexOf(step);
-    $("wizardProgress").textContent=(index+1)+" / 3";
-    document.querySelectorAll(".wizard-progress i").forEach((dot,i)=>{
-      dot.classList.toggle("is-current",i===index);
-      dot.classList.toggle("is-complete",i<index);
-    });
-    if(step==="date")updateQuickDateLabel();
-    if(step==="time")updateQuickCountdown();
-    if(focus) {
-      const target=step==="message"?$("quickReminderTitle"):step==="date"?$("quickReminderDate"):$("quickReminderTime");
-      target.focus({preventScroll:true});
-    }
-  }
-  function updateQuickDateLabel(){
-    const date=parseDate($("quickReminderDate").value);
-    if(!date){$("quickDateFriendly").textContent="Επίλεξε ημερομηνία";return;}
-    const now=new Date(),today=localDate(now);
-    const tomorrow=localDate(new Date(now.getFullYear(),now.getMonth(),now.getDate()+1));
-    const name=date.toLocaleDateString("el-GR",{weekday:"long",day:"numeric",month:"long"});
-    const value=localDate(date);
-    $("quickDateFriendly").textContent=(value===today?"Σήμερα":value===tomorrow?"Αύριο":"")+" "+name;
   }
   function resetQuickForm() {
     const candidate=upcomingQuickDefault();
@@ -232,62 +193,14 @@
     $("quickReminderDate").value=localDate(candidate);
     $("quickReminderDate").min=localDate(new Date());
     $("quickReminderTime").value=String(candidate.getHours()).padStart(2,"0")+":"+String(candidate.getMinutes()).padStart(2,"0");
-    updateQuickDateLabel();
-    updateQuickCountdown();
-    setWizardStep("message");
-  }
-  function updateQuickCountdown(){
-    const date=parseDate($("quickReminderDate").value),time=$("quickReminderTime").value;
-    const value=$("quickCountdownValue"),info=$("quickCountdownLabel"),wrapper=$("quickCountdown");
-    if(!date || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){
-      wrapper.classList.add("is-expired");
-      value.textContent="--:--";info.textContent="Επίλεξε ημέρα και ώρα";
-      return;
-    }
-    const remaining=withTime(date,time).getTime()-Date.now();
-    if(remaining<=0){
-      wrapper.classList.add("is-expired");
-      value.textContent="00:00";info.textContent="Η ώρα έχει περάσει";
-      return;
-    }
-    wrapper.classList.remove("is-expired");
-    const minutes=Math.ceil(remaining/60000);
-    const hours=Math.floor(minutes/60);
-    value.textContent=String(hours).padStart(2,"0")+":"+String(minutes%60).padStart(2,"0");
-    value.setAttribute("aria-label",hours+" ώρες και "+(minutes%60)+" λεπτά");
-    info.textContent="ώρες : λεπτά";
   }
   function focusQuickComposer(){
-    setWizardStep("message",true);
-    $("quickComposer").classList.remove("quick-highlight");
-    void $("quickComposer").offsetWidth;
-    $("quickComposer").classList.add("quick-highlight");
+    const el=$("quickComposer");
+    el.classList.remove("quick-highlight");
+    void el.offsetWidth;
+    el.classList.add("quick-highlight");
+    $("quickReminderTitle").focus({preventScroll:true});
   }
-  function nextFromMessage(){
-    if(!$("quickReminderTitle").value.trim()){
-      toast("Γράψε πρώτα τι θέλεις να θυμηθείς.");
-      $("quickReminderTitle").focus();return;
-    }
-    setWizardStep("date");
-  }
-  function nextFromDate(){
-    const date=parseDate($("quickReminderDate").value);
-    if(!date || date<parseDate(localDate(new Date()))){
-      toast("Επίλεξε σημερινή ή μελλοντική ημερομηνία.");return;
-    }
-    setWizardStep("time");
-  }
-  $("quickMessageNext").addEventListener("click",nextFromMessage);
-  $("quickReminderTitle").addEventListener("keydown",event=>{
-    if(event.key==="Enter"&&!event.isComposing){event.preventDefault();nextFromMessage();}
-  });
-  $("quickReminderDate").addEventListener("input",updateQuickDateLabel);
-  $("quickReminderDate").addEventListener("change",updateQuickDateLabel);
-  $("quickDateNext").addEventListener("click",nextFromDate);
-  $("quickDateBack").addEventListener("click",()=>setWizardStep("message",true));
-  $("quickTimeBack").addEventListener("click",()=>setWizardStep("date"));
-  $("quickReminderTime").addEventListener("input",updateQuickCountdown);
-  $("quickReminderTime").addEventListener("change",updateQuickCountdown);
   $("quickMore").addEventListener("click",()=>{
     openDialog();
     $("reminderTitle").value=$("quickReminderTitle").value;
@@ -297,14 +210,13 @@
   });
   $("quickReminderForm").addEventListener("submit",event=>{
     event.preventDefault();
-    if(wizardStep!=="time"){wizardStep==="message"?nextFromMessage():nextFromDate();return;}
     const title=$("quickReminderTitle").value.trim();
     const date=$("quickReminderDate").value,time=$("quickReminderTime").value;
     const day=parseDate(date);
-    if(!title){setWizardStep("message",true);toast("Γράψε το μήνυμα.");return;}
-    if(!day){setWizardStep("date");toast("Διάλεξε ημερομηνία.");return;}
-    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)||withTime(day,time).getTime()<=Date.now()){
-      updateQuickCountdown();toast("Διάλεξε μελλοντική ώρα.");return;
+    if(!title){toast("Γράψε τι θέλεις να θυμηθείς.");$("quickReminderTitle").focus();return;}
+    if(!day||day<parseDate(localDate(new Date()))){toast("Διάλεξε σημερινή ή μελλοντική ημερομηνία.");return;}
+    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(time)||withTime(day,time).getTime()<=Date.now()){
+      toast("Διάλεξε μελλοντική ώρα.");return;
     }
     const record=normalize({
       id:createId(),title,date,time,notes:"",repeat:"once",category:"general",
@@ -318,7 +230,6 @@
     toast("Η υπενθύμιση αποθηκεύτηκε.");
   });
   resetQuickForm();
-  setInterval(updateQuickCountdown,30000);
 
   function openDialog(id=null) {
     const r=id ? reminders.find(item=>item.id===id) : null;
