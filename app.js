@@ -215,7 +215,7 @@
     const day=parseDate(date);
     if(!title){toast("Γράψε τι θέλεις να θυμηθείς.");$("quickReminderTitle").focus();return;}
     if(!day||day<parseDate(localDate(new Date()))){toast("Διάλεξε σημερινή ή μελλοντική ημερομηνία.");return;}
-    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(time)||withTime(day,time).getTime()<=Date.now()){
+    if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)||withTime(day,time).getTime()<=Date.now()){
       toast("Διάλεξε μελλοντική ώρα.");return;
     }
     const record=normalize({
