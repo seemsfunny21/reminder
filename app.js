@@ -290,29 +290,43 @@
     const surface=document.querySelector(".screen-split");
     if(!surface)return;
     const filters=["active","today","upcoming","completed"];
-    let start=null;
+    let start=null,swiped=false;
+    // Whole cards are swipeable; form inputs retain native controls.
     const blocked=target=>target instanceof Element && !!target.closest(
-      'button,a,input,select,textarea,label,form,dialog,summary,details,iframe,[contenteditable],[data-no-swipe],[role="slider"],.quick-composer'
+      'input,select,textarea,iframe,video,audio,[contenteditable],[data-no-swipe],[role="slider"],[role="textbox"]'
     );
     surface.addEventListener("touchstart",event=>{
-      start=null;
+      start=null;swiped=false;
       if(event.touches.length!==1||blocked(event.target)||$("editorDialog").open)return;
       const touch=event.touches[0];
       if(touch.clientX<24||touch.clientX>window.innerWidth-24)return;
       start={x:touch.clientX,y:touch.clientY,at:Date.now()};
     },{passive:true});
+    surface.addEventListener("touchmove",event=>{
+      if(!start||event.touches.length!==1)return;
+      const touch=event.touches[0],dx=touch.clientX-start.x,dy=touch.clientY-start.y;
+      if(Math.abs(dx)>22&&Math.abs(dx)>Math.abs(dy)*1.5&&event.cancelable){
+        event.preventDefault(); // Do not activate a card button after swiping.
+      }
+    },{passive:false});
     surface.addEventListener("touchend",event=>{
       if(!start)return;
       const origin=start;start=null;
-      if(event.changedTouches.length!==1||blocked(event.target)||$("editorDialog").open)return;
+      if(event.changedTouches.length!==1||$("editorDialog").open)return;
       const touch=event.changedTouches[0];
       const dx=touch.clientX-origin.x,dy=touch.clientY-origin.y;
       if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6||Date.now()-origin.at>1000)return;
       const pos=filters.indexOf(filter),next=pos+(dx<0?1:-1);
       if(next<0||next>=filters.length)return;
+      swiped=true;
       document.querySelector('.main-nav [data-filter="'+filters[next]+'"]')?.click();
     },{passive:true});
-    surface.addEventListener("touchcancel",()=>{start=null},{passive:true});
+    surface.addEventListener("click",event=>{
+      if(swiped&&event.isTrusted){
+        swiped=false;event.preventDefault();event.stopImmediatePropagation();
+      }
+    },true);
+    surface.addEventListener("touchcancel",()=>{start=null;swiped=false},{passive:true});
   })();
 
   $("reminderList").addEventListener("click",event=>{
