@@ -1,5 +1,5 @@
-const CACHE_NAME = "reminder-pwa-v16-generated-hero";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=3","./push.js","./app.js?v=8","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
+const CACHE_NAME = "reminder-pwa-v17-swipe-equal-hero";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=4","./push.js","./app.js?v=9","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
