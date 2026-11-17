@@ -284,6 +284,37 @@
     filter=button.dataset.filter; expandedId=null; render();
     const pane=document.querySelector(".list-scroll");if(pane)pane.scrollTop=0;
   }));
+  // Mobile swipe: move between the existing four reminder filters.
+  // Keep the quick-create form, actions and dialogs immune to gestures.
+  (function installReminderSwipe(){
+    const surface=document.querySelector(".screen-split");
+    if(!surface)return;
+    const filters=["active","today","upcoming","completed"];
+    let start=null;
+    const blocked=target=>target instanceof Element && !!target.closest(
+      'button,a,input,select,textarea,label,form,dialog,summary,details,iframe,[contenteditable],[data-no-swipe],[role="slider"],.quick-composer'
+    );
+    surface.addEventListener("touchstart",event=>{
+      start=null;
+      if(event.touches.length!==1||blocked(event.target)||$("editorDialog").open)return;
+      const touch=event.touches[0];
+      if(touch.clientX<24||touch.clientX>window.innerWidth-24)return;
+      start={x:touch.clientX,y:touch.clientY,at:Date.now()};
+    },{passive:true});
+    surface.addEventListener("touchend",event=>{
+      if(!start)return;
+      const origin=start;start=null;
+      if(event.changedTouches.length!==1||blocked(event.target)||$("editorDialog").open)return;
+      const touch=event.changedTouches[0];
+      const dx=touch.clientX-origin.x,dy=touch.clientY-origin.y;
+      if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6||Date.now()-origin.at>1000)return;
+      const pos=filters.indexOf(filter),next=pos+(dx<0?1:-1);
+      if(next<0||next>=filters.length)return;
+      document.querySelector('.main-nav [data-filter="'+filters[next]+'"]')?.click();
+    },{passive:true});
+    surface.addEventListener("touchcancel",()=>{start=null},{passive:true});
+  })();
+
   $("reminderList").addEventListener("click",event=>{
     const button=event.target.closest("button[data-action]");
     if (!button) return;
