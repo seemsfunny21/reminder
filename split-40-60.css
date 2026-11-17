@@ -228,3 +228,23 @@
  .premium-glass .wizard-half .topbar.reminder-hero-head{margin-bottom:2px!important}
  .premium-glass .reminder-hero-head #todayLabel{font-size:9px!important}
 }
+
+/* Same visual banner height as Routes and Parking; preserve the 40/60 split. */
+@media(max-width:760px){
+ .premium-glass .reminder-hero-art{
+  width:100%!important;
+  height:clamp(74px,12dvh,112px)!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center!important;
+ }
+}
+@media(min-width:761px){
+ .premium-glass .reminder-hero-art{
+  width:100%!important;
+  height:150px!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center!important;
+ }
+}
