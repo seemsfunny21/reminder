@@ -69,45 +69,22 @@
           </header>
           <section class="quick-composer" id="quickComposer" aria-labelledby="quickHeading">
             <div class="quick-ambient" aria-hidden="true"></div>
-            <div class="wizard-topline">
-              <div class="wizard-progress" aria-hidden="true"><i class="is-current"></i><i></i><i></i></div>
-              <span id="wizardProgress">1 / 3</span>
-            </div>
-            <form id="quickReminderForm" class="quick-form" autocomplete="off" novalidate>
-              <section class="wizard-step" data-step="message" aria-labelledby="quickHeading">
-                <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-bell"/></svg></span>
-                <h2 id="quickHeading">Τι θέλεις να θυμηθείς;</h2>
-                <label class="sr-only" for="quickReminderTitle">Τι να σου θυμίσω;</label>
-                <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Γράψε την υπενθύμισή σου…" enterkeyhint="next" required>
-                <button id="quickMessageNext" class="button-primary wizard-next" type="button">Επόμενο <svg><use href="#i-arrow"/></svg></button>
-              </section>
-              <section class="wizard-step" data-step="date" aria-labelledby="quickDateHeading" hidden>
-                <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-calendar"/></svg></span>
-                <h2 id="quickDateHeading">Ποια ημέρα;</h2>
-                <p class="wizard-selection" id="quickDateFriendly">Σήμερα</p>
-                <label for="quickReminderDate" class="quick-label">Ημερομηνία</label>
-                <input id="quickReminderDate" type="date" required>
-                <div class="wizard-actions">
-                  <button id="quickDateBack" class="wizard-back" type="button"><svg><use href="#i-arrow"/></svg> Πίσω</button>
-                  <button id="quickDateNext" class="button-primary wizard-next" type="button">Επόμενο <svg><use href="#i-arrow"/></svg></button>
-                </div>
-              </section>
-              <section class="wizard-step" data-step="time" aria-labelledby="quickTimeHeading" hidden>
-                <span class="wizard-step-icon" aria-hidden="true"><svg><use href="#i-clock"/></svg></span>
-                <h2 id="quickTimeHeading">Τι ώρα;</h2>
-                <label for="quickReminderTime" class="quick-label">Ώρα υπενθύμισης</label>
-                <input id="quickReminderTime" type="time" required>
-                <div class="quick-countdown" id="quickCountdown" role="status" aria-live="off">
-                  <span>Απομένουν</span>
-                  <strong id="quickCountdownValue" class="quick-countdown-value" aria-label="Χρόνος που απομένει">--:--</strong>
-                  <small id="quickCountdownLabel">ώρες : λεπτά</small>
-                </div>
-                <div class="wizard-actions">
-                  <button id="quickTimeBack" class="wizard-back" type="button"><svg><use href="#i-arrow"/></svg> Πίσω</button>
-                  <button id="quickSave" class="button-primary quick-save" type="submit"><svg><use href="#i-check"/></svg> Αποθήκευση</button>
-                </div>
-                <button id="quickMore" class="quick-more" type="button">Περισσότερες επιλογές</button>
-              </section>
+            <form id="quickReminderForm" class="quick-form quick-simple" autocomplete="off" novalidate>
+              <h2 id="quickHeading">Νέα υπενθύμιση</h2>
+              <label class="sr-only" for="quickReminderTitle">Τι θέλεις να θυμηθείς;</label>
+              <input id="quickReminderTitle" type="text" maxlength="110" placeholder="Τι θέλεις να θυμηθείς;" enterkeyhint="done" required>
+              <div class="quick-schedule">
+                <label class="quick-field" for="quickReminderDate"><span>Ημερομηνία</span>
+                  <input id="quickReminderDate" type="date" required>
+                </label>
+                <label class="quick-field" for="quickReminderTime"><span>Ώρα</span>
+                  <input id="quickReminderTime" type="time" required>
+                </label>
+              </div>
+              <div class="quick-actions">
+                <button id="quickSave" class="button-primary quick-save" type="submit"><svg><use href="#i-check"/></svg> Αποθήκευση</button>
+                <button id="quickMore" class="quick-more" type="button">Περισσότερα</button>
+              </div>
             </form>
           </section>
         </section>
