@@ -248,3 +248,9 @@
   object-position:center!important;
  }
 }
+
+/* Consistent inset and corner radius for the five Applications hero banners. */
+@media(max-width:760px){
+ .premium-glass .content-area{padding-top:12px!important}
+ .premium-glass .reminder-hero-art{border-radius:12px!important}
+}
