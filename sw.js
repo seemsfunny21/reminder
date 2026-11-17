@@ -1,5 +1,5 @@
-const CACHE_NAME = "reminder-pwa-v18-card-swipes";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=4","./push.js","./app.js?v=10","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
+const CACHE_NAME = "reminder-pwa-v19-banner-uniform";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=5","./push.js","./app.js?v=10","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
