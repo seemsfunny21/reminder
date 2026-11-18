@@ -127,9 +127,9 @@
       const bt=nextOrOverdue(b,now)?.getTime() ?? Number.MAX_SAFE_INTEGER;
       return at-bt || a.title.localeCompare(b.title,"el");
     });
-    const titles={active:"Οι υπενθυμίσεις μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Έγιναν / Πέρασαν"};
+    const titles={active:"Η λίστα μου",today:"Για σήμερα",upcoming:"Προσεχώς",completed:"Έγιναν / Πέρασαν"};
     $("reminderHeading").textContent=titles[filter];
-    $("visibleCount").textContent=filtered.length===1 ? "1 υπενθύμιση" : filtered.length+" υπενθυμίσεις";
+    $("visibleCount").textContent=filtered.length===1 ? "1 στοιχείο" : filtered.length+" στοιχεία";
     document.querySelectorAll("[data-filter]").forEach(button=>{
       const selected=button.dataset.filter===filter;
       button.classList.toggle("active",selected);
@@ -137,7 +137,7 @@
       else button.removeAttribute("aria-current");
     });
     if (!filtered.length) {
-      const messages={active:"Δεν έχεις υπενθυμίσεις",today:"Τίποτα για σήμερα",upcoming:"Δεν υπάρχουν επόμενες",completed:"Καμία περασμένη υπενθύμιση"};
+      const messages={active:"Η λίστα είναι άδεια",today:"Τίποτα για σήμερα",upcoming:"Δεν υπάρχουν επόμενες",completed:"Δεν υπάρχει ιστορικό"};
       $("reminderList").innerHTML='<div class="empty-state"><span class="empty-icon"><svg><use href="#i-bell"/></svg></span><strong>'+messages[filter]+'</strong></div>';
       return;
     }
