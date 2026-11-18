@@ -1,5 +1,5 @@
-const CACHE_NAME = "reminder-pwa-v19-banner-uniform";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=5","./push.js","./app.js?v=10","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
+const CACHE_NAME = "reminder-pwa-v20-simplified-labels";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=5","./push.js","./app.js?v=11","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
@@ -20,6 +20,24 @@ self.addEventListener("fetch", event => {
       !url.pathname.startsWith(scope.pathname)) return;
   if (!(req.mode === "navigate" ||
         ["script", "style", "image", "font", "manifest"].includes(req.destination))) return;
+
+  // Fresh HTML on every online launch; use the cached app only when offline.
+  // This avoids the installed PWA showing yesterday's headings on a phone.
+  if(req.mode === "navigate"){
+    event.respondWith((async()=>{
+      const cache=await caches.open(CACHE_NAME);
+      try{
+        const response=await fetch(req,{cache:"no-store"});
+        if(response.ok && response.type==="basic"){
+          try{await cache.put("./index.html",response.clone());}catch(_){}
+        }
+        return response;
+      }catch{
+        return await cache.match("./index.html") || await cache.match("./") || Response.error();
+      }
+    })());
+    return;
+  }
 
   const network = fetch(req, {cache: "no-cache"}).then(async response => {
     if (response.ok && response.type === "basic") {
