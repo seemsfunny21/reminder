@@ -254,3 +254,43 @@
  .premium-glass .content-area{padding-top:12px!important}
  .premium-glass .reminder-hero-art{border-radius:12px!important}
 }
+
+
+/* Desktop / television workspace: composer and reminders side by side.
+   The original 40/60 vertical split is kept exactly on phones. */
+@media (min-width:1300px) and (min-height:680px){
+  .premium-glass .sidebar{
+    width:clamp(222px,15vw,280px);
+    padding-top:clamp(24px,3vh,38px);
+  }
+  .premium-glass .content-area{
+    max-width:1780px;
+    padding:clamp(18px,2.4vh,28px) clamp(18px,2.3vw,48px);
+  }
+  .premium-glass .screen-split{
+    display:grid;
+    grid-template-columns:minmax(360px,.86fr) minmax(460px,1.14fr);
+    grid-template-rows:minmax(0,1fr);
+    gap:clamp(15px,1.3vw,25px);
+    align-items:stretch;
+    min-height:0;
+  }
+  .premium-glass .wizard-half,
+  .premium-glass .list-half{min-height:0;min-width:0;height:100%}
+  .premium-glass .quick-composer{
+    min-height:0;
+    padding:clamp(16px,1.8vw,30px);
+    overflow-y:auto;
+  }
+  .premium-glass .list-half-header{padding:18px 22px 14px}
+  .premium-glass .list-scroll{padding:14px 18px 22px;overflow-y:auto}
+  .premium-glass .reminder-list{gap:12px}
+  .premium-glass .reminder-card{padding:14px 18px;min-height:78px}
+  .premium-glass .quick-form.quick-simple{max-width:580px}
+}
+@media (min-width:1850px) and (min-height:850px){
+  .premium-glass .content-area{max-width:2000px}
+  .premium-glass .screen-split{gap:30px}
+  .premium-glass .quick-composer{padding:32px}
+  .premium-glass .reminder-card{min-height:87px}
+}
