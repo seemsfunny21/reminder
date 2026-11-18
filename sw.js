@@ -1,5 +1,5 @@
-const CACHE_NAME = "reminder-pwa-v20-simplified-labels";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=5","./push.js","./app.js?v=11","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
+const CACHE_NAME = "reminder-pwa-v21-desktop-columns";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=6","./push.js","./app.js?v=11","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
