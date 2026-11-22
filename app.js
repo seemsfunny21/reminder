@@ -380,10 +380,23 @@
   function updatePermissionUI(){
     const push=window.ReminderPush;
     const active=!!push?.isActive();
-    $("enableNotifications").textContent=active ? "Δοκιμή" : "Ενεργοποίηση";
-    $("notificationTitle").textContent=active ? "Push ενεργό" : "Ειδοποιήσεις";
-    $("notificationExplanation").textContent=active ? "" :
-      push?.supported() ? "Λήψη ακόμη και με κλειστή εφαρμογή." : "Δεν υποστηρίζονται σε αυτόν τον browser.";
+    const embedded=window.top!==window.self;
+    const supported=!!push?.supported();
+    const permitted=supported&&Notification.permission==="granted";
+    $("enableNotifications").textContent=active ? "Δοκιμή Push" : "Ενεργοποίηση";
+    $("notificationTitle").textContent=active ? "✓ Push ενεργό" : "○ Push ανενεργό";
+    $("notificationExplanation").textContent=active
+      ? "Οι υπενθυμίσεις αποστέλλονται στην ώρα τους ως ειδοποιήσεις, ακόμη και με κλειστή εφαρμογή. Έλεγχος κάθε 1 λεπτό."
+      : !supported ? "Ο browser δεν υποστηρίζει Web Push."
+      : Notification.permission==="denied" ? "Οι ειδοποιήσεις έχουν αποκλειστεί στις ρυθμίσεις του Android."
+      : embedded&&!permitted ? "Για να επιτρέψεις Push, άνοιξε την Υπενθύμιση ξεχωριστά μία φορά."
+      : "Πάτησε Ενεργοποίηση για να λαμβάνεις υπενθυμίσεις με κλειστή οθόνη.";
+    const standalone=$("reminderPushStandalone");
+    if(standalone){
+      const show=embedded&&!active;
+      standalone.hidden=!show;
+      standalone.style.display=show?"block":"none";
+    }
     $("notificationTitle").closest(".notice")?.classList.toggle("is-active",active);
   }
   window.addEventListener("reminderpushstate",event=>{
