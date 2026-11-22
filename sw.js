@@ -1,5 +1,5 @@
-const CACHE_NAME = "reminder-pwa-v23-bottom-nav-desktop";
-const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=8","./push.js","./app.js?v=11","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
+const CACHE_NAME = "reminder-pwa-v24-due-time-push";
+const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=8","./push.js?v=2","./app.js?v=12","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
@@ -66,7 +66,7 @@ self.addEventListener("fetch", event => {
   })());
 });
 
-// Future Web Push transport: a server needs to subscribe each device and send the push payload.
+// Scheduled server Web Push: display the due reminder even with the app closed.
 self.addEventListener("push",event=>{
   let payload={};
   try{payload=event.data?.json()||{};}
@@ -77,6 +77,8 @@ self.addEventListener("push",event=>{
       body:typeof payload.body==="string"?payload.body:"Έχεις μια νέα υπενθύμιση.",
       icon:"./icon.svg",badge:"./icon.svg",
       tag:typeof payload.tag==="string"?payload.tag:"reminder-push",
+      requireInteraction:true,
+      timestamp:Date.now(),
       data:{url:"./"}
     }
   ));
