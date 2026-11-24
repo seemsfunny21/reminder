@@ -77,8 +77,11 @@
   }
   function nextOccurrence(reminder,from = new Date()) {
     if (!reminder.enabled || reminder.completed) return null;
+    const start = parseDate(reminder.date);
+    if (!start) return null;
+    const base = start > from ? start : from;
     for (let offset=0;offset<=35;offset++) {
-      const day = new Date(from.getFullYear(),from.getMonth(),from.getDate()+offset);
+      const day = new Date(base.getFullYear(),base.getMonth(),base.getDate()+offset);
       const candidate = occurrenceOn(reminder,day);
       if (candidate && candidate.getTime() > from.getTime()) return candidate;
     }
