@@ -273,10 +273,10 @@
     if(!previous)resetQuickForm();
     toast(previous?"Η υπενθύμιση ενημερώθηκε.":"Η υπενθύμιση αποθηκεύτηκε.");
   });
-  $("deleteReminder").addEventListener("click",()=>{
+  $("deleteReminder").addEventListener("click",async()=>{
     if (!editingId) return;
-    if (!confirm("Να διαγραφεί οριστικά αυτή η υπενθύμιση;")) return;
-    reminders=reminders.filter(r=>r.id!==editingId);
+    const targetId=editingId;if (!await appConfirm("Να διαγραφεί οριστικά αυτή η υπενθύμιση;")||editingId!==targetId) return;
+    reminders=reminders.filter(r=>r.id!==targetId);
     expandedId=null;
     persist(); closeDialog(); render(); toast("Η υπενθύμιση διαγράφηκε.");
   });
@@ -368,7 +368,7 @@
       if (!Array.isArray(records)) throw new Error("bad format");
       const valid=records.map(normalize).filter(Boolean);
       if (records.length && !valid.length) throw new Error("no valid reminders");
-      if (!confirm("Η εισαγωγή θα αντικαταστήσει τις υπενθυμίσεις αυτής της συσκευής. Συνέχεια;")) return;
+      if (!await appConfirm("Η εισαγωγή θα αντικαταστήσει τις υπενθυμίσεις αυτής της συσκευής. Συνέχεια;")) return;
       reminders=valid;persist();filter="active";render();toast("Εισήχθησαν "+valid.length+" υπενθυμίσεις.");
     } catch { toast("Το αρχείο δεν είναι έγκυρο αντίγραφο Reminder."); }
   });
@@ -477,3 +477,19 @@ function showInactivePushNotice(key,openSettings,active){
   setInterval(checkDue,15000);
   setInterval(()=>render(),60000);
 })();
+function appConfirm(message){return appDialog(message)}
+function appDialog(message,opt={}){
+ return new Promise(resolve=>{
+  if(document.querySelector("dialog[data-app-dialog]")){resolve(opt.input?null:false);return}
+  const previous=document.activeElement,d=document.createElement("dialog");d.dataset.appDialog="1";
+  d.setAttribute("aria-label",opt.title||"Επιβεβαίωση");
+  d.style.cssText="position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(92vw,380px);max-height:85dvh;overflow:auto;padding:16px;border:1px solid #4779ab;border-radius:16px;background:#102b48;color:#e5efff;box-shadow:0 12px 50px #0009;font:14px/1.45 system-ui";
+  const h=document.createElement("h2"),p=document.createElement("p"),row=document.createElement("div");h.textContent=opt.title||"Επιβεβαίωση";h.style.cssText="font-size:17px;margin:0 0 8px;color:#fff";p.textContent=String(message);p.style.cssText="margin:0 0 12px;color:#d4e5f5;overflow-wrap:anywhere";row.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px";
+  let input=null,done=false;if(opt.input){input=document.createElement("input");input.type=opt.password?"password":"text";input.value=opt.value||"";input.setAttribute("aria-label",opt.title||"Κείμενο");input.autocomplete=opt.password?"new-password":"off";input.style.cssText="box-sizing:border-box;width:100%;padding:10px;border:1px solid #4779ab;border-radius:8px;background:#173958;color:white;font:inherit"}
+  function finish(v){if(done)return;done=true;d.close();d.remove();if(previous?.isConnected)previous.focus({preventScroll:true});resolve(v)}
+  for(const [label,primary] of [["Ακύρωση",false],[opt.ok||"Επιβεβαίωση",true]]){const b=document.createElement("button");b.type="button";b.textContent=label;b.style.cssText="min-height:42px;width:100%;padding:8px;border:1px solid #4779ab;border-radius:9px;color:white;font:inherit;cursor:pointer;background:"+(primary?"#2874bf":"#244765");b.onclick=()=>finish(primary?(opt.input?input.value:true):(opt.input?null:false));row.append(b)}
+  d.append(h,p);if(input)d.append(input);d.append(row);document.body.append(d);d.addEventListener("cancel",e=>{e.preventDefault();finish(opt.input?null:false)});d.addEventListener("close",()=>finish(opt.input?null:false),{once:true});
+  if(input)input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();finish(input.value)}});
+  try{d.showModal();(input||row.firstChild).focus()}catch{d.remove();resolve(opt.input?null:false)}
+ });
+}
