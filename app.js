@@ -380,6 +380,21 @@
       data:{url:new URL("./",location.href).href}
     });
   }
+function showInactivePushNotice(key,openSettings,active){
+ const id="startup-push-notice";if(active){document.getElementById(id)?.remove();return}
+ let hidden=false;try{hidden=localStorage.getItem(key)==="1"}catch{}
+ if(hidden||window.__pushNoticeDismissed||document.getElementById(id)||!document.body)return;
+ const box=document.createElement("aside");box.id=id;box.setAttribute("aria-label","Ειδοποιήσεις");box.style.cssText="position:fixed;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(92%,360px);z-index:90;background:#173650;color:#fff;border:1px solid #659bc1;border-radius:12px;padding:10px;box-shadow:0 4px 18px #0005;font:13px system-ui;display:grid;gap:7px;box-sizing:border-box";
+ const title=document.createElement("strong");title.textContent="🔕 Οι ειδοποιήσεις είναι ανενεργές";const row=document.createElement("div");row.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:6px";
+ const label=document.createElement("label"),check=document.createElement("input");check.type="checkbox";check.style.cssText="width:16px;height:16px;flex:none";label.style.cssText="display:flex;align-items:center;gap:6px;font-size:12px";label.append(check,document.createTextNode("Να μην εμφανιστεί ξανά"));
+ function dismiss(){if(check.checked)try{localStorage.setItem(key,"1")}catch{}window.__pushNoticeDismissed=true;box.remove()}
+ for(const [name,fn] of [["Ενεργοποίηση",()=>{dismiss();openSettings()}],["Αργότερα",dismiss]]){const b=document.createElement("button");b.type="button";b.textContent=name;b.style.cssText="background:#215780;color:white;border:1px solid #659bc1;border-radius:8px;padding:8px;font:inherit;cursor:pointer";b.onclick=fn;row.append(b)}
+ box.append(title,row,label);document.body.append(box);
+}
+  function checkStartupPush(){
+   const p=window.ReminderPush;if(!p?.supported())return;
+   showInactivePushNotice("reminder.push.notice.hide",()=>{const b=$("enableNotifications");if(window.self!==window.top&&Notification.permission!=="granted"){window.open(new URL("./",location.href).href,"_blank","noopener");return}b?.scrollIntoView({block:"center",behavior:"smooth"});b?.focus({preventScroll:true})},p.isActive());
+  }
   function updatePermissionUI(){
     const push=window.ReminderPush;
     const active=!!push?.isActive();
@@ -404,6 +419,7 @@
   }
   window.addEventListener("reminderpushstate",event=>{
     updatePermissionUI();
+    if(event.detail?.active)document.getElementById("startup-push-notice")?.remove();
     if(event.detail?.message && !event.detail.active) console.warn("Reminder Push:",event.detail.message);
   });
   $("enableNotifications").addEventListener("click",async()=>{
@@ -456,7 +472,7 @@
   document.addEventListener("visibilitychange",()=>{ if(!document.hidden){render();checkDue();} });
   window.addEventListener("focus",()=>{render();checkDue();});
   window.addEventListener("storage",event=>{if(event.key===STORAGE_KEY){reminders=loadReminders();render();window.ReminderPush?.changed(reminders);}});
-  initServiceWorker().then(()=>{window.ReminderPush?.init(()=>reminders);checkDue();});
+  initServiceWorker().then(async()=>{await window.ReminderPush?.init(()=>reminders);checkStartupPush();checkDue();});
   updatePermissionUI();render();
   setInterval(checkDue,15000);
   setInterval(()=>render(),60000);
