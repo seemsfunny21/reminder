@@ -95,7 +95,7 @@
   }
   function timeLabel(date,now = new Date()) {
     if (!date) return "Χωρίς επόμενη ημερομηνία";
-    const hm=date.toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit"});
+    const hm=date.toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit",hourCycle:'h23'});
     if (sameDay(date,now)) return "Σήμερα, "+hm;
     const tomorrow = new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);
     if (sameDay(date,tomorrow)) return "Αύριο, "+hm;
