@@ -1,4 +1,4 @@
-const CACHE_NAME = "reminder-pwa-v25-stress-fixes-ui-dialog-2";
+const CACHE_NAME = "reminder-pwa-v26-credit";
 const APP_SHELL = ["./","./index.html","./styles.css","./premium.css?v=4","./midnight.css?v=2","./split-40-60.css?v=8","./push.js?v=2","./app.js?v=ui-dialog-20261128","./manifest.webmanifest","./icon.svg","./hero-banner.webp"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
